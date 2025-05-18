@@ -199,7 +199,7 @@ static void rideCallBack(dBgW* param_0, fopAc_ac_c* param_1, fopAc_ac_c* param_2
 
 /* 80BB5678-80BB56A4 0003D8 002C+00 1/0 0/0 0/0 .text daObjBhbridge_Draw__FP15daObjBhbridge_c */
 static void daObjBhbridge_Draw(daObjBhbridge_c* param_0) {
-    // NONMATCHING
+    param_0->MoveBGDraw();
 }
 
 /* 80BB56A4-80BB56C4 000404 0020+00 1/0 0/0 0/0 .text daObjBhbridge_Execute__FP15daObjBhbridge_c
