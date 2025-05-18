@@ -205,7 +205,7 @@ static void daObjBhbridge_Draw(daObjBhbridge_c* param_0) {
 /* 80BB56A4-80BB56C4 000404 0020+00 1/0 0/0 0/0 .text daObjBhbridge_Execute__FP15daObjBhbridge_c
  */
 static void daObjBhbridge_Execute(daObjBhbridge_c* param_0) {
-    // NONMATCHING
+    param_0->MoveBGExecute();
 }
 
 /* 80BB56C4-80BB56CC 000424 0008+00 1/0 0/0 0/0 .text daObjBhbridge_IsDelete__FP15daObjBhbridge_c
