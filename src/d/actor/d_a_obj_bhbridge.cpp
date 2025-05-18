@@ -317,7 +317,7 @@ SECTION_DEAD static char const* const stringBase_80BB5F9C = "M_BHbridge.bmd";
 #pragma pop
 
 /* 80BB5934-80BB59AC 000694 0078+00 1/0 0/0 0/0 .text            CreateHeap__15daObjBhbridge_cFv */
-void daObjBhbridge_c::CreateHeap() {
+int daObjBhbridge_c::CreateHeap() {
     // NONMATCHING
 }
 
@@ -358,7 +358,7 @@ COMPILER_STRIP_GATE(0x80BB5F54, &lit_3857);
 #pragma pop
 
 /* 80BB59AC-80BB5A14 00070C 0068+00 1/0 0/0 0/0 .text            Create__15daObjBhbridge_cFv */
-void daObjBhbridge_c::Create() {
+int daObjBhbridge_c::Create() {
     // NONMATCHING
 }
 
@@ -441,17 +441,17 @@ COMPILER_STRIP_GATE(0x80BB5F80, &lit_3901);
 #pragma pop
 
 /* 80BB5A14-80BB5E10 000774 03FC+00 1/0 0/0 0/0 .text Execute__15daObjBhbridge_cFPPA3_A4_f */
-void daObjBhbridge_c::Execute(f32 (**param_0)[3][4]) {
+int daObjBhbridge_c::Execute(f32 (**param_0)[3][4]) {
     // NONMATCHING
 }
 
 /* 80BB5E10-80BB5EB4 000B70 00A4+00 1/0 0/0 0/0 .text            Draw__15daObjBhbridge_cFv */
-void daObjBhbridge_c::Draw() {
+int daObjBhbridge_c::Draw() {
     // NONMATCHING
 }
 
 /* 80BB5EB4-80BB5EE8 000C14 0034+00 1/0 0/0 0/0 .text            Delete__15daObjBhbridge_cFv */
-void daObjBhbridge_c::Delete() {
+int daObjBhbridge_c::Delete() {
     // NONMATCHING
 }
 
