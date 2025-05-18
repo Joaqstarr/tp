@@ -215,8 +215,10 @@ static bool daObjBhbridge_IsDelete(daObjBhbridge_c* param_0) {
 }
 
 /* 80BB56CC-80BB56F0 00042C 0024+00 1/0 0/0 0/0 .text daObjBhbridge_Delete__FP15daObjBhbridge_c */
-static void daObjBhbridge_Delete(daObjBhbridge_c* param_0) {
-    // NONMATCHING
+static int daObjBhbridge_Delete(daObjBhbridge_c* param_0) {
+    param_0->MoveBGDelete();
+
+    return 1;
 }
 
 /* ############################################################################################## */
