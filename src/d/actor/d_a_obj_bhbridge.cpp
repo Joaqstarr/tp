@@ -4,8 +4,9 @@
 */
 
 #include "d/actor/d_a_obj_bhbridge.h"
+#include "f_op/f_op_actor_mng.h"
 #include "dol2asm.h"
-
+#include "d/d_bg_w.h"
 
 //
 // Forward References:
@@ -301,8 +302,9 @@ SECTION_DATA extern void* __vt__15daObjBhbridge_c[10] = {
 };
 
 /* 80BB56F0-80BB58C4 000450 01D4+00 1/0 0/0 0/0 .text daObjBhbridge_Create__FP10fopAc_ac_c */
-static void daObjBhbridge_Create(fopAc_ac_c* param_0) {
+static void daObjBhbridge_Create(daObjBhbridge_c* param_0) {
     // NONMATCHING
+    fopAcM_RegisterCreateID(daObjBhbridge_c, param_0, "daObjBhbridge_c");
 }
 
 /* 80BB58C4-80BB5934 000624 0070+00 3/2 0/0 0/0 .text            __dt__12dBgS_ObjAcchFv */
@@ -362,6 +364,12 @@ COMPILER_STRIP_GATE(0x80BB5F54, &lit_3857);
 /* 80BB59AC-80BB5A14 00070C 0068+00 1/0 0/0 0/0 .text            Create__15daObjBhbridge_cFv */
 int daObjBhbridge_c::Create() {
     // NONMATCHING
+
+    fopAcM_setCullSizeBox(this, -400.0,-800.0,-1000.0,400.0,300.0,1000.0);
+    initBaseMtx();
+    mpBgW->SetRideCallback(rideCallBack);
+
+    return 4;
 }
 
 /* ############################################################################################## */
