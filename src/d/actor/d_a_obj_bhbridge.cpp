@@ -11,6 +11,7 @@
 #include "d/d_com_inf_game.h"
 #include "d/d_s_play.h"
 #include "d/actor/d_a_player.h"
+#include "m_do/m_Do_mtx.h"
 //
 // Forward References:
 //
@@ -200,7 +201,10 @@ void daObjBhbridge_c::initBaseMtx() {
 
 /* 80BB55B8-80BB5614 000318 005C+00 2/2 0/0 0/0 .text            setBaseMtx__15daObjBhbridge_cFv */
 void daObjBhbridge_c::setBaseMtx() {
-    // NONMATCHING
+    mDoMtx_stack_c::transS(current.pos);
+    mDoMtx_stack_c::ZXYrotM(shape_angle);
+    mpModel->setBaseTRMtx(mDoMtx_stack_c::get());
+    cMtx_copy(mDoMtx_stack_c::get(), mBgMtx);
 }
 
 /* ############################################################################################## */
