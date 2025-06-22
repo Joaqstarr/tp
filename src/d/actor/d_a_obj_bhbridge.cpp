@@ -217,7 +217,12 @@ COMPILER_STRIP_GATE(0x80BB5F38, &lit_3759);
 /* 80BB5614-80BB5678 000374 0064+00 1/1 0/0 0/0 .text
  * rideCallBack__FP4dBgWP10fopAc_ac_cP10fopAc_ac_c              */
 static void rideCallBack(dBgW* param_0, fopAc_ac_c* param_1, fopAc_ac_c* param_2) {
-    // NONMATCHING
+    daPy_py_c* player = daPy_getLinkPlayerActorClass();
+    daObjBhbridge_c* as_bridge = static_cast<daObjBhbridge_c*>(param_1);
+	if((!as_bridge->mIsPlayerRiding) && player->current.pos.y - player->old.pos.y < -1.0) {
+		as_bridge->mBounceAmplitude = -6.0f;
+    }
+    as_bridge->Check_RideOn();
 }
 
 /* 80BB5678-80BB56A4 0003D8 002C+00 1/0 0/0 0/0 .text daObjBhbridge_Draw__FP15daObjBhbridge_c */
