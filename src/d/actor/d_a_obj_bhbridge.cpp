@@ -12,6 +12,7 @@
 #include "d/d_s_play.h"
 #include "d/actor/d_a_player.h"
 #include "m_do/m_Do_mtx.h"
+#include "SSystem/SComponent/c_lib.h"
 //
 // Forward References:
 //
@@ -65,9 +66,6 @@ extern "C" void SetObj__16dBgS_PolyPassChkFv();
 extern "C" void settingTevStruct__18dScnKy_env_light_cFiP4cXyzP12dKy_tevstr_c();
 extern "C" void setLightTevColorType_MAJI__18dScnKy_env_light_cFP12J3DModelDataP12dKy_tevstr_c();
 extern "C" void SetPos__11cBgS_GndChkFPC4cXyz();
-extern "C" void cLib_addCalc__FPfffff();
-extern "C" void cLib_addCalcAngleS__FPsssss();
-extern "C" void cLib_targetAngleY__FPC3VecPC3Vec();
 extern "C" void seStart__7Z2SeMgrF10JAISoundIDPC3VecUlScffffUc();
 extern "C" void seStartLevel__7Z2SeMgrF10JAISoundIDPC3VecUlScffffUc();
 extern "C" void __dl__FPv();
@@ -95,8 +93,8 @@ SECTION_RODATA static u8 const lit_3655[8] = {
 COMPILER_STRIP_GATE(0x80BB5F00, &lit_3655);
 
 /* 80BB5318-80BB5380 000078 0068+00 1/1 0/0 0/0 .text RideOn_Angle__15daObjBhbridge_cFRsfsf */
-void daObjBhbridge_c::RideOn_Angle(s16& param_0, f32 param_1, s16 param_2, f32 param_3) {
-    // NONMATCHING
+void daObjBhbridge_c::RideOn_Angle(s16& param_1, f32 param_2, s16 param_3, f32 param_4) {
+    cLib_addCalcAngleS(&param_1, (s16)(param_3 * (param_2 / param_4)), 1, 256, 1);
 }
 
 /* ############################################################################################## */
