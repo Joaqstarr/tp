@@ -315,20 +315,19 @@ int daObjBhbridge_Create(fopAc_ac_c* i_this) {
 
 
 
-/* 80BB58C4-80BB5934 000624 0070+00 3/2 0/0 0/0 .text            __dt__12dBgS_ObjAcchFv */
-// dBgS_ObjAcch::~dBgS_ObjAcch() {
 
 
-/* ############################################################################################## */
-/* 80BB5F84-80BB5F84 000084 0000+00 0/0 0/0 0/0 .rodata          @stringBase0 */
-#pragma push
-#pragma force_active on
-SECTION_DEAD static char const* const stringBase_80BB5F9C = "M_BHbridge.bmd";
-#pragma pop
+static char const* const stringBase0 = "M_BHbridge.bmd";
+
 
 /* 80BB5934-80BB59AC 000694 0078+00 1/0 0/0 0/0 .text            CreateHeap__15daObjBhbridge_cFv */
 int daObjBhbridge_c::CreateHeap() {
-    // NONMATCHING
+
+    J3DModelData* model_data = (J3DModelData*)dComIfG_getObjectRes(daObjBhbridge_c::l_arcName, stringBase0);
+	mpModel = mDoExt_J3DModel__create(model_data,  0x80000, 0x11000084);
+
+	return mpModel != NULL ? 1 : 0;
+
 }
 
 /* ############################################################################################## */
