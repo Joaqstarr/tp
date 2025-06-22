@@ -194,7 +194,8 @@ int daObjBhbridge_c::Check_RideOn() {
 
 /* 80BB558C-80BB55B8 0002EC 002C+00 1/1 0/0 0/0 .text            initBaseMtx__15daObjBhbridge_cFv */
 void daObjBhbridge_c::initBaseMtx() {
-    // NONMATCHING
+    fopAcM_SetMtx(this, mpModel->getBaseTRMtx());
+    setBaseMtx();
 }
 
 /* 80BB55B8-80BB5614 000318 005C+00 2/2 0/0 0/0 .text            setBaseMtx__15daObjBhbridge_cFv */
