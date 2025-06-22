@@ -10,6 +10,7 @@
 #include "d/d_bg_s.h"
 #include "d/d_com_inf_game.h"
 #include "d/d_s_play.h"
+#include "d/actor/d_a_player.h"
 //
 // Forward References:
 //
@@ -165,8 +166,30 @@ COMPILER_STRIP_GATE(0x80BB5F30, &lit_3709);
 
 /* 80BB5380-80BB558C 0000E0 020C+00 1/1 0/0 0/0 .text            Check_RideOn__15daObjBhbridge_cFv
  */
-void daObjBhbridge_c::Check_RideOn() {
-    // NONMATCHING
+int daObjBhbridge_c::Check_RideOn() {
+    daPy_py_c* player = daPy_getLinkPlayerActorClass();
+	Vec* player_pos = (Vec*)fopAcM_GetPosition_p(player);
+    short added_calc = 0;
+	mIsPlayerRiding = true;
+
+    s16 target_angle = cLib_targetAngleY(&current.pos, player_pos);
+    f32 pos_abs = current.pos.abs(*player_pos);
+
+    f32 cos = cM_scos(target_angle - shape_angle.y);
+
+    RideOn_Angle(mRotationOscillation.z, pos_abs * cos, 80, 180.0f);
+
+  	mIsPlayerRiding = true;
+
+ 	if(fopAcM_GetSpeedF(player) >  0.0f) {
+        added_calc = 1024;
+		mRotationOscillationAmplitude = 336.f;
+    }
+
+    mRideOffset = 0.f;
+
+	cLib_addCalc(&mWaterStateTimer, (f32)added_calc, HREG_F(13)+0.05f, 100, 0);
+    return 0;
 }
 
 /* 80BB558C-80BB55B8 0002EC 002C+00 1/1 0/0 0/0 .text            initBaseMtx__15daObjBhbridge_cFv */
@@ -294,9 +317,7 @@ int daObjBhbridge_Create(fopAc_ac_c* i_this) {
 
 /* 80BB58C4-80BB5934 000624 0070+00 3/2 0/0 0/0 .text            __dt__12dBgS_ObjAcchFv */
 // dBgS_ObjAcch::~dBgS_ObjAcch() {
-extern "C" void __dt__12dBgS_ObjAcchFv() {
-    // NONMATCHING
-}
+
 
 /* ############################################################################################## */
 /* 80BB5F84-80BB5F84 000084 0000+00 0/0 0/0 0/0 .rodata          @stringBase0 */

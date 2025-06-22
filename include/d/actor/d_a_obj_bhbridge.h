@@ -22,7 +22,7 @@ class J3DModel;
 class daObjBhbridge_c : public dBgS_MoveBgActor {
 public:
     /* 80BB5318 */ void RideOn_Angle(s16&, f32, s16, f32);
-    /* 80BB5380 */ void Check_RideOn();
+    /* 80BB5380 */ int Check_RideOn();
     /* 80BB558C */ void initBaseMtx();
     /* 80BB55B8 */ void setBaseMtx();
     /* 80BB5934 */ int CreateHeap();
