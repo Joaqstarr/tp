@@ -31,7 +31,6 @@ public:
     /* 80BB5E10 */ int Draw();
     /* 80BB5EB4 */ int Delete();
 
-private:
     /* 0x5A0 */ float mWaterStateTimer;
     /* 0x5A4 */ bool mIsInWater;
     /* 0x5A8 */ float mBounceAmplitude;
@@ -50,8 +49,11 @@ private:
     /* 0x5E0 */ cXyz mMiscPos2;
     /* 0x5EC */ J3DModel *mpModel;
     /* 0x5F0 */ request_of_phase_process_class mRequestOfPhase;
-    /* 0x5F8 */ dBgS_Acch mpDBgS_Acch;
+    /* 0x5F8 */ dBgS_ObjAcch mDBgS_Acch;
     /* 0x7D0 */ dBgS_AcchCir mDBgS_AcchCir;
+
+    static char* l_arcName;
+
 };
 
 STATIC_ASSERT(sizeof(daObjBhbridge_c) == 0x810);

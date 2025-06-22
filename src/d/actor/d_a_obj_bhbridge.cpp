@@ -7,7 +7,9 @@
 #include "f_op/f_op_actor_mng.h"
 #include "dol2asm.h"
 #include "d/d_bg_w.h"
-
+#include "d/d_bg_s.h"
+#include "d/d_com_inf_game.h"
+#include "d/d_s_play.h"
 //
 // Forward References:
 //
@@ -16,20 +18,14 @@ extern "C" void RideOn_Angle__15daObjBhbridge_cFRsfsf();
 extern "C" void Check_RideOn__15daObjBhbridge_cFv();
 extern "C" void initBaseMtx__15daObjBhbridge_cFv();
 extern "C" void setBaseMtx__15daObjBhbridge_cFv();
-extern "C" static void rideCallBack__FP4dBgWP10fopAc_ac_cP10fopAc_ac_c();
-extern "C" static void daObjBhbridge_Draw__FP15daObjBhbridge_c();
-extern "C" static void daObjBhbridge_Execute__FP15daObjBhbridge_c();
-extern "C" static bool daObjBhbridge_IsDelete__FP15daObjBhbridge_c();
-extern "C" static void daObjBhbridge_Delete__FP15daObjBhbridge_c();
-extern "C" static void daObjBhbridge_Create__FP10fopAc_ac_c();
+
 extern "C" void __dt__12dBgS_ObjAcchFv();
 extern "C" void CreateHeap__15daObjBhbridge_cFv();
 extern "C" void Create__15daObjBhbridge_cFv();
 extern "C" void Execute__15daObjBhbridge_cFPPA3_A4_f();
 extern "C" void Draw__15daObjBhbridge_cFv();
 extern "C" void Delete__15daObjBhbridge_cFv();
-extern "C" static void func_80BB5EE8();
-extern "C" static void func_80BB5EF0();
+
 extern "C" extern char const* const d_a_obj_bhbridge__stringBase0;
 
 //
@@ -80,7 +76,7 @@ extern "C" void _restgpr_26();
 extern "C" void _restgpr_28();
 extern "C" void _restgpr_29();
 extern "C" u8 now__14mDoMtx_stack_c[48];
-extern "C" extern u8 g_dComIfG_gameInfo[122384];
+
 extern "C" u8 sincosTable___5JMath[65536];
 extern "C" f32 mWaterY__11fopAcM_wt_c[1 + 1 /* padding */];
 extern "C" u8 mAudioMgrPtr__10Z2AudioMgr[4 + 4 /* padding */];
@@ -245,67 +241,56 @@ SECTION_DEAD static char const* const stringBase_80BB5F8D = "M_BHbridge.dzb";
 #pragma pop
 
 /* 80BB5FAC-80BB5FB0 -00001 0004+00 3/3 0/0 0/0 .data            l_arcName */
-SECTION_DATA static void* l_arcName = (void*)&d_a_obj_bhbridge__stringBase0;
+char* daObjBhbridge_c::l_arcName = (char*)&d_a_obj_bhbridge__stringBase0;
 
-/* 80BB5FB0-80BB5FD0 -00001 0020+00 1/0 0/0 0/0 .data            l_daObjBhbridge_Method */
-static actor_method_class l_daObjBhbridge_Method = {
-    (process_method_func)daObjBhbridge_Create__FP10fopAc_ac_c,
-    (process_method_func)daObjBhbridge_Delete__FP15daObjBhbridge_c,
-    (process_method_func)daObjBhbridge_Execute__FP15daObjBhbridge_c,
-    (process_method_func)daObjBhbridge_IsDelete__FP15daObjBhbridge_c,
-    (process_method_func)daObjBhbridge_Draw__FP15daObjBhbridge_c,
-};
 
-/* 80BB5FD0-80BB6000 -00001 0030+00 0/0 0/0 1/0 .data            g_profile_Obj_Bhbridge */
-extern actor_process_profile_definition g_profile_Obj_Bhbridge = {
-  fpcLy_CURRENT_e,         // mLayerID
-  3,                       // mListID
-  fpcPi_CURRENT_e,         // mListPrio
-  PROC_Obj_Bhbridge,       // mProcName
-  &g_fpcLf_Method.base,   // sub_method
-  sizeof(daObjBhbridge_c), // mSize
-  0,                       // mSizeOther
-  0,                       // mParameters
-  &g_fopAc_Method.base,    // sub_method
-  459,                     // mPriority
-  &l_daObjBhbridge_Method, // sub_method
-  0x00040180,              // mStatus
-  fopAc_ACTOR_e,           // mActorType
-  fopAc_CULLBOX_CUSTOM_e,  // cullType
-};
 
-/* 80BB6000-80BB6024 000054 0024+00 2/2 0/0 0/0 .data            __vt__12dBgS_ObjAcch */
-SECTION_DATA extern void* __vt__12dBgS_ObjAcch[9] = {
-    (void*)NULL /* RTTI */,
-    (void*)NULL,
-    (void*)__dt__12dBgS_ObjAcchFv,
-    (void*)NULL,
-    (void*)NULL,
-    (void*)func_80BB5EF0,
-    (void*)NULL,
-    (void*)NULL,
-    (void*)func_80BB5EE8,
-};
-
-/* 80BB6024-80BB604C 000078 0028+00 1/1 0/0 0/0 .data            __vt__15daObjBhbridge_c */
-SECTION_DATA extern void* __vt__15daObjBhbridge_c[10] = {
-    (void*)NULL /* RTTI */,
-    (void*)NULL,
-    (void*)CreateHeap__15daObjBhbridge_cFv,
-    (void*)Create__15daObjBhbridge_cFv,
-    (void*)Execute__15daObjBhbridge_cFPPA3_A4_f,
-    (void*)Draw__15daObjBhbridge_cFv,
-    (void*)Delete__15daObjBhbridge_cFv,
-    (void*)IsDelete__16dBgS_MoveBgActorFv,
-    (void*)ToFore__16dBgS_MoveBgActorFv,
-    (void*)ToBack__16dBgS_MoveBgActorFv,
-};
 
 /* 80BB56F0-80BB58C4 000450 01D4+00 1/0 0/0 0/0 .text daObjBhbridge_Create__FP10fopAc_ac_c */
-static void daObjBhbridge_Create(daObjBhbridge_c* param_0) {
+int daObjBhbridge_Create(fopAc_ac_c* i_this) {
     // NONMATCHING
-    fopAcM_RegisterCreateID(daObjBhbridge_c, param_0, "daObjBhbridge_c");
+
+    daObjBhbridge_c* a_this = static_cast<daObjBhbridge_c*>(i_this)
+        ;
+    fopAcM_SetupActor(i_this, daObjBhbridge_c);
+
+
+    int i_res_load_result = dComIfG_resLoad(&a_this->mRequestOfPhase, daObjBhbridge_c::l_arcName);
+    if (i_res_load_result != cPhs_COMPLEATE_e) {
+
+        int i_res_load_result_2 = dComIfG_getObjctResName2Index(daObjBhbridge_c::l_arcName, "M_BHbridge.dzb");
+
+        int move_bg_create_status = a_this->MoveBGCreate(daObjBhbridge_c::l_arcName, i_res_load_result_2, dBgS_MoveBGProc_TypicalRotY, 5536, NULL);
+        if(move_bg_create_status == cPhs_ERROR_e){
+            return cPhs_ERROR_e;
+        }
+
+        a_this->mDBgS_Acch.Set(fopAcM_GetPosition_p(i_this), fopAcM_GetOldPosition_p(i_this), i_this, 1,
+                               &a_this->mDBgS_AcchCir, fopAcM_GetSpeed_p(i_this), NULL, NULL);
+
+        dBgS& i_dBgS = dComIfG_Bgsp();
+
+        a_this->mDBgS_Acch.CrrPos(i_dBgS);
+
+        cXyz i_position(i_this->current.pos);
+        i_position.y = i_position.y + 300.0f;
+        dBgS_ObjGndChk_Spl i_gnd_chk;
+
+        i_gnd_chk.SetPos(&i_position);
+
+        dBgS& i_dBgS_2 = dComIfG_Bgsp();
+
+        f32 i_gnd_y = i_dBgS_2.GroundCross(&i_gnd_chk);
+        if(i_gnd_y != -1e+09f){
+            i_this->current.pos.y = i_gnd_y + 100.0f;
+        }
+
+        return move_bg_create_status;
+    }
+    return i_res_load_result;
 }
+
+
 
 /* 80BB58C4-80BB5934 000624 0070+00 3/2 0/0 0/0 .text            __dt__12dBgS_ObjAcchFv */
 // dBgS_ObjAcch::~dBgS_ObjAcch() {
@@ -463,6 +448,9 @@ int daObjBhbridge_c::Draw() {
 /* 80BB5EB4-80BB5EE8 000C14 0034+00 1/0 0/0 0/0 .text            Delete__15daObjBhbridge_cFv */
 int daObjBhbridge_c::Delete() {
     // NONMATCHING
+	dComIfG_resDelete(&mRequestOfPhase, daObjBhbridge_c::l_arcName);
+
+    return 1;
 }
 
 /* 80BB5EE8-80BB5EF0 000C48 0008+00 1/0 0/0 0/0 .text            @36@__dt__12dBgS_ObjAcchFv */
@@ -476,3 +464,30 @@ static void func_80BB5EF0() {
 }
 
 /* 80BB5F84-80BB5F84 000084 0000+00 0/0 0/0 0/0 .rodata          @stringBase0 */
+
+/* 80BB5FB0-80BB5FD0 -00001 0020+00 1/0 0/0 0/0 .data            l_daObjBhbridge_Method */
+static actor_method_class l_daObjBhbridge_Method = {
+    (process_method_func)daObjBhbridge_Create,
+    (process_method_func)daObjBhbridge_Delete,
+    (process_method_func)daObjBhbridge_Execute,
+    (process_method_func)daObjBhbridge_IsDelete,
+    (process_method_func)daObjBhbridge_Draw,
+};
+
+/* 80BB5FD0-80BB6000 -00001 0030+00 0/0 0/0 1/0 .data            g_profile_Obj_Bhbridge */
+extern actor_process_profile_definition g_profile_Obj_Bhbridge = {
+    fpcLy_CURRENT_e,         // mLayerID
+    3,                       // mListID
+    fpcPi_CURRENT_e,         // mListPrio
+    PROC_Obj_Bhbridge,       // mProcName
+    &g_fpcLf_Method.base,   // sub_method
+    sizeof(daObjBhbridge_c), // mSize
+    0,                       // mSizeOther
+    0,                       // mParameters
+    &g_fopAc_Method.base,    // sub_method
+    459,                     // mPriority
+    &l_daObjBhbridge_Method, // sub_method
+    0x00040180,              // mStatus
+    fopAc_ACTOR_e,           // mActorType
+    fopAc_CULLBOX_CUSTOM_e,  // cullType
+  };
