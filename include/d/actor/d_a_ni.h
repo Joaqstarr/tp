@@ -16,16 +16,6 @@
 #define BCK_WALK_A 12
 #define BCK_WALK_B 13
 
-#define JNT_WAIST 0
-#define JNT_LEGL 1
-#define JNT_FOOTL 2
-#define JNT_LEGR 3
-#define JNT_FOOTR 4
-#define JNT_NECK 5
-#define JNT_HEAD 6
-#define JNT_WINGL 7
-#define JNT_WINGR 8
-
 enum daNi_color {
     COLOR_WHITE,
     COLOR_BLACK,
@@ -60,6 +50,20 @@ enum daNi_action {
 class ni_class : public fopEn_enemy_c {
 public:
     bool checkGold() { return mColor == COLOR_GOLD; }
+
+    void setMtx(MtxP mtx) {
+        cXyz newPos;
+        field_0xb08 = 1;
+        mDoMtx_stack_c::copy(mtx);
+        mDoMtx_stack_c::multVecZero(&newPos);
+        current.pos = newPos;
+        old.pos = current.pos;
+        speed.y = 0.0f;
+        speedF = 0.0f;
+        mpMorf->getModel()->setBaseTRMtx(mtx);
+    }
+
+    void changeMode() { field_0x5fe = 1; }
 
     /* 0x5AC */ request_of_phase_process_class mPhase;
     /* 0x5B4 */ u8 field_0x5b4;
@@ -152,8 +156,8 @@ STATIC_ASSERT(sizeof(ni_class) == 0xb0c);
 
 class daNi_HIO_c {
 public:
-    /* 8094BC2C */ daNi_HIO_c();
-    /* 80951118 */ virtual ~daNi_HIO_c() {}
+    daNi_HIO_c();
+    virtual ~daNi_HIO_c() {}
 
     /* 0x04 */ s8 field_0x04;
     /* 0x08 */ f32 mBaseSize;

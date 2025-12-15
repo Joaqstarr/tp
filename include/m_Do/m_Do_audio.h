@@ -55,6 +55,10 @@ inline void mDoAud_bgmStart(u32 i_bgmID) {
     Z2AudioMgr::getInterface()->bgmStart(i_bgmID, 0, 0);
 }
 
+inline void mDoAud_bgmAllMute(u32 i_count) {
+    Z2AudioMgr::getInterface()->bgmAllMute(i_count, 0.0f);
+}
+
 inline void mDoAud_subBgmStart(u32 i_bgmID) {
     Z2AudioMgr::getInterface()->subBgmStart(i_bgmID);
 }
@@ -287,6 +291,13 @@ inline void mDoAud_talkOut() {
 
 inline void mDoAud_talkIn() {
     Z2AudioMgr::getInterface()->talkIn();
+}
+
+inline int mDoAud_monsSeStart(u32 i_soundId, const Vec* i_pos, u32 i_actorId, u32 param_3,
+                               s8 i_reverb) {
+    (void)i_actorId;
+    return Z2GetAudioMgr()->seStart(i_soundId, i_pos, param_3, i_reverb, 1.0f, 1.0f, -1.0f, -1.0f,
+                                    0);
 }
 
 #endif /* M_DO_M_DO_AUDIO_H */

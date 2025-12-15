@@ -6,13 +6,14 @@
 
 class dMenu_DmapMap_c {
 public:
-    /* 801C04AC */ virtual ~dMenu_DmapMap_c();
-    /* 801C0CD8 */ void _create(u16, u16, u16, u16, void*);
-    /* 801C0D04 */ void _delete();
-    /* 801C0D70 */ void setTexture(u16, u16, u16, u16);
-    /* 801C0E4C */ void setPos(int, int, f32, f32, f32, bool, f32);
+    virtual ~dMenu_DmapMap_c() {}
+    void _create(u16, u16, u16, u16, void*);
+    void _delete();
+    void setTexture(u16, u16, u16, u16);
+    void setPos(int, int, f32, f32, f32, bool, f32);
 
     const renderingDmap_c* getRendPointer(int i_no) const { return &mRend[i_no]; }
+    ResTIMG* getResTIMGPointer(int i_no) const { return mResTIMG[i_no]; }
 
     /* 0x04 */ renderingDmap_c mRend[2];
     /* 0x74 */ ResTIMG* mResTIMG[2];
@@ -22,53 +23,116 @@ public:
 
 class dMenu_StageMapCtrl_c : public dMenu_DmapMap_c {
 public:
-    virtual ~dMenu_StageMapCtrl_c() {}
-    virtual bool isEnableZoomMove() const;
-    virtual void calcZoomCenter(f32*, f32*);
-    virtual void getInitWholeMapScale(f32*, f32, f32, f32, f32);
-    virtual void getInitDispCenter(f32*, f32*);
-    virtual void getZoomMinMaxCheck(f32*, f32*, f32*, f32*, bool*, bool*);
-    virtual f32 getZoomCmPerPixel();
-    virtual void draw();
+    dMenu_StageMapCtrl_c() {
+        field_0x8c = NULL;
+        field_0x90 = 0.0f;
+        field_0x94 = 0.0f;
+        field_0x98 = 0.0f;
+        field_0x9c = 0.0f;
+        field_0xa0 = 0.0f;
+        field_0xa4 = 0.0f;
+        field_0xa8 = 0.0f;
+        field_0xac = 0.0f;
+        field_0xb0 = 0.0f;
+        field_0xb4 = 0.0f;
+        field_0xb8 = 0.0f;
+        field_0xbc = 0.0f;
+        field_0xc0 = 0.0f;
+        field_0xc4 = 0.0f;
+        field_0xc8 = 0.0f;
+        field_0xcc = 0.0f;
+        field_0xd0 = 0.0f;
+        field_0xd4 = 0.0f;
+        field_0xd8 = 0.0f;
+        field_0xe4 = 0;
+        field_0xe6 = 0;
+        field_0xe7 = 0;
+        field_0xe8 = 0;
+        field_0xe9 = 0;
+        field_0xea = 0;
+        field_0xeb = 0;
+        field_0xec = 0;
+        field_0xed = 0;
+        field_0xee = 0;
+        field_0xef = 0;
+        field_0xf0 = 0;
+        field_0xf1 = 0;
+        field_0xf2 = 0;
+        field_0xf3 = 0;
+        field_0xf4 = 0;
+        field_0xf5 = 0;
+        field_0xf6 = 0;
+        field_0xf7 = 0;
+        field_0xf8 = false;
+        field_0xf9 = false;
+    }
 
-    /* 801C0EE0 */ f32 getMapBlendPer() const;
-    /* 801C0F24 */ f32 getPixelStageSizeX() const;
-    /* 801C0F3C */ f32 getPixelStageSizeZ() const;
-    /* 801C0F54 */ f32 getPixelCenterX() const;
-    /* 801C0F74 */ f32 getPixelCenterZ() const;
-    /* 801C0F94 */ void initGetTreasureList(u8, s8);
-    /* 801C0FF8 */ bool getTreasureList(f32*, f32*, s8*, u8*, s8*);
-    /* 801C1128 */ void cnvPosTo2Dpos(f32, f32, f32*, f32*) const;
-    /* 801C1194 */ void getPlayerDrawInfo(f32*, f32*, s16*) const;
-    /* 801C1218 */ s8 getRestartDrawInfo(f32*, f32*, s16*) const;
-    /* 801C12A8 */ void setPlusNowStayFloorNo(s8, u8);
-    /* 801C12B4 */ void moveFloor();
-    /* 801C1878 */ void wait_init_proc();
-    /* 801C188C */ void wait_proc();
-    /* 801C18AC */ void zoomIn_init_proc();
-    /* 801C1C40 */ void initZoomIn(u8);
-    /* 801C1CEC */ void initZoomIn(u8, f32, f32);
-    /* 801C1E00 */ void initZoomInCenterHold(u8);
-    /* 801C1E74 */ void zoomCalcSet(f32);
-    /* 801C1EC0 */ void zoomIn_proc();
-    /* 801C1F2C */ void initZoomOut(u8);
-    /* 801C1F70 */ void initZoomWait(f32, f32);
-    /* 801C2004 */ void zoomWait_init_proc();
-    /* 801C205C */ void zoomWait_proc();
-    /* 801C2198 */ void zoomOut_init_proc();
-    /* 801C21AC */ void zoomOut_proc();
-    /* 801C2234 */ void move();
-    /* 801C22F8 */ s8 getPlayerStayFloorNo() const;
-    /* 801C231C */ void _create(u16, u16, u16, u16, void*);
-    /* 801C235C */ void _create(u16, u16, u16, u16, s8, void*);
-    /* 801C2518 */ void _delete();
-    /* 801C2538 */ bool isEnableZoomIn();
-    /* 801C2578 */ bool isEnableZoomOut();
-    /* 801C2588 */ void setPlusZoomCenterX(f32);
-    /* 801C2590 */ void setPlusZoomCenterZ(f32);
+    virtual ~dMenu_StageMapCtrl_c() {}
+    virtual bool isEnableZoomMove() const = 0;
+    virtual void calcZoomCenter(f32*, f32*) = 0;
+    virtual void getInitWholeMapScale(f32*, f32, f32, f32, f32) = 0;
+    virtual void getInitDispCenter(f32*, f32*) = 0;
+    virtual void getZoomMinMaxCheck(f32*, f32*, f32*, f32*, bool*, bool*) = 0;
+    virtual f32 getZoomCmPerPixel() = 0;
+    void draw() {}
+
+    f32 getMapBlendPer() const;
+    f32 getPixelStageSizeX() const;
+    f32 getPixelStageSizeZ() const;
+    f32 getPixelCenterX() const;
+    f32 getPixelCenterZ() const;
+    void initGetTreasureList(u8, s8);
+    bool getTreasureList(f32*, f32*, s8*, u8*, s8*);
+    void cnvPosTo2Dpos(f32, f32, f32*, f32*) const;
+    void getPlayerDrawInfo(f32*, f32*, s16*) const;
+    s8 getRestartDrawInfo(f32*, f32*, s16*) const;
+    void setPlusNowStayFloorNo(s8, u8);
+    void moveFloor();
+    void wait_init_proc();
+    void wait_proc();
+    void zoomIn_init_proc();
+    void initZoomIn(u8);
+    void initZoomIn(u8, f32, f32);
+    void initZoomInCenterHold(u8);
+    void zoomCalcSet(f32);
+    void zoomIn_proc();
+    void initZoomOut(u8);
+    void initZoomWait(f32, f32);
+    void zoomWait_init_proc();
+    void zoomWait_proc();
+    void zoomOut_init_proc();
+    void zoomOut_proc();
+    void move();
+    s8 getPlayerStayFloorNo() const;
+    void _create(u16, u16, u16, u16, void*);
+    void _create(u16, u16, u16, u16, s8, void*);
+    void _delete();
+    bool isEnableZoomIn();
+    bool isEnableZoomOut();
+    void setPlusZoomCenterX(f32);
+    void setPlusZoomCenterZ(f32);
 
     u8 getDisableZoomMoveFlgX() const { return field_0xf8; }
     u8 getDisableZoomMoveFlgZ() const { return field_0xf9; }
+
+    s8 getNowStayFloorNo() const { return field_0xe7; }
+    s8 getTopFloorNo() const { return field_0xed; }
+    s8 getBottomFloorNo() const { return field_0xee; }
+    s8 getDispFloorNo() const { return field_0xeb; }
+    s8 getDispFloor2No() const { return field_0xec; }
+
+    f32 getDispCenterX() const { return field_0x9c; }
+    f32 getDispCenterZ() const { return field_0xa0; }
+
+    f32 getStageMapSizeX() const { return dMpath_c::getSizeX(); }
+    f32 getStageMapSizeZ() const { return dMpath_c::getSizeZ(); }
+
+    f32 getZoomCenterMaxX() { return field_0xcc; }
+    f32 getZoomCenterMinX() { return field_0xc8; }
+    f32 getZoomCenterMaxZ() { return field_0xd4; }
+    f32 getZoomCenterMinZ() { return field_0xd0; }
+
+    f32 getPixelPerCm() const { return 1.0f / field_0xbc; }
 
     f32 makeStayFloorBlendPer(int param_0, f32 param_1) {
         return param_0 + param_1;
@@ -81,6 +145,11 @@ public:
     f32 getBlendPer(f32 param_0) const {
         return std::fmod(param_0, 1.0f);
     }
+
+    bool isEndZoomIn() const { return field_0xf5 == 2; }
+    bool isEndZoomOut() const { return field_0xf5 == 0; }
+
+    ResTIMG* getResTIMGPointer(int i_no) const { return dMenu_DmapMap_c::getResTIMGPointer(i_no); }
 
     static f32 m_zoomCenterMinX;
     static f32 m_zoomCenterMaxX;
@@ -135,14 +204,13 @@ public:
 
 class dMenu_DmapMapCtrl_c : public dMenu_StageMapCtrl_c {
 public:
-    /* 801BD144 */ virtual ~dMenu_DmapMapCtrl_c() {}
-    /* 801C2028 */ virtual bool isEnableZoomMove() const;
-    /* 801C1B14 */ virtual void calcZoomCenter(f32*, f32*);
-    /* 801C2598 */ virtual void getInitWholeMapScale(f32*, f32, f32, f32, f32);
-    /* 801C25C0 */ virtual void getInitDispCenter(f32*, f32*);
-    /* 801C18C0 */ virtual void getZoomMinMaxCheck(f32*, f32*, f32*, f32*, bool*, bool*);
-    /* 801C1BA4 */ virtual f32 getZoomCmPerPixel();
-    /* 801C22A8 */ virtual void draw();
+    virtual bool isEnableZoomMove() const;
+    virtual void calcZoomCenter(f32*, f32*);
+    virtual void getInitWholeMapScale(f32*, f32, f32, f32, f32);
+    virtual void getInitDispCenter(f32*, f32*);
+    virtual void getZoomMinMaxCheck(f32*, f32*, f32*, f32*, bool*, bool*);
+    virtual f32 getZoomCmPerPixel();
+    virtual void draw();
 };
 
 #endif /* D_MENU_D_MENU_DMAP_MAP_H */

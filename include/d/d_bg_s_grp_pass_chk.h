@@ -11,9 +11,9 @@ public:
         /* 0x3 */ FULL_GRP
     };
 
-    /* 80077BA0 */ dBgS_GrpPassChk();
+    dBgS_GrpPassChk();
 
-    /* 80077BC4 */ virtual ~dBgS_GrpPassChk();
+    virtual ~dBgS_GrpPassChk();
 
     void OnWaterGrp() { mGrp |= WATER_GRP; }
     void OnSpl() { mGrp |= WATER_GRP; }
@@ -22,8 +22,8 @@ public:
     void OffNormalGrp() { mGrp &= ~NORMAL_GRP; }
     void OffFullGrp() { mGrp &= ~FULL_GRP; }
     void OnAll() { mGrp |= FULL_GRP; }
-    u32 MaskNormalGrp() const {return mGrp & NORMAL_GRP; }
-    u32 MaskWaterGrp() const {return mGrp & WATER_GRP; }
+    u32 MaskNormalGrp() { return mGrp & NORMAL_GRP; }
+    u32 MaskWaterGrp() { return mGrp & WATER_GRP; }
 private:
     /* 0x4 */ u32 mGrp;
 };

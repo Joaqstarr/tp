@@ -10,7 +10,7 @@ class JKRHeap;
 
 namespace JASBNKParser {
     struct TFileHeader {
-        /* 0x0 */ u8 _00[4];
+        /* 0x0 */ int id;
         /* 0x4 */ u32 mSize;
         /* 0x8 */ u8 _08[4];
         /* 0xC */ u32 mVersion;
@@ -54,8 +54,8 @@ namespace JASBNKParser {
             /* 0xC */ u32 mOffsets[0];
         };
 
-        /* 80299600 */ TChunk* findChunk(void const*, u32);
-        /* 8029963C */ JASBasicBank* createBasicBank(void const*, JKRHeap*);
+        TChunk* findChunk(void const*, u32);
+        JASBasicBank* createBasicBank(void const*, JKRHeap*);
     };
 
     namespace Ver0 {
@@ -124,13 +124,13 @@ namespace JASBNKParser {
             /* 0x20 */ TOffsetData mOffsets;
         };
 
-        /* 80299A3C */ JASBasicBank* createBasicBank(void const*, JKRHeap*);
-        /* 80299E68 */ JASOscillator::Data* findOscPtr(JASBasicBank*, THeader const*, TOsc const*);
-        /* 80299F8C */ JASOscillator::Point const* getOscTableEndPtr(JASOscillator::Point const*);
+        JASBasicBank* createBasicBank(void const*, JKRHeap*);
+        JASOscillator::Data* findOscPtr(JASBasicBank*, THeader const*, TOsc const*);
+        JASOscillator::Point const* getOscTableEndPtr(JASOscillator::Point const*);
     };
 
-    /* 80299538 */ JASBank* createBank(void const*, JKRHeap*);
-    /* 80299558 */ JASBasicBank* createBasicBank(void const*, JKRHeap*);
+    JASBank* createBank(void const*, JKRHeap*);
+    JASBasicBank* createBasicBank(void const*, JKRHeap*);
 
     inline u32 getBankNumber(const void* param_0) { return ((u32*)param_0)[2]; }
 

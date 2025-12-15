@@ -1,7 +1,7 @@
 #ifndef D_A_NPC_PRAYER_H
 #define D_A_NPC_PRAYER_H
 
-#include "d/actor/d_a_npc.h"
+#include "d/actor/d_a_npc4.h"
 
 /**
  * @ingroup actors-npcs
@@ -11,54 +11,78 @@
  * @details
  *
  */
-class daNpcPray_c : public fopAc_ac_c {
+class daNpcPray_c : public daNpcF_c {
 public:
-    /* 80AB2DEC */ daNpcPray_c();
-    /* 80AB3000 */ ~daNpcPray_c();
-    /* 80AB3204 */ void Create();
-    /* 80AB348C */ void CreateHeap();
-    /* 80AB3610 */ void Delete();
-    /* 80AB3644 */ void Execute();
-    /* 80AB3668 */ void Draw();
-    /* 80AB36A8 */ void ctrlJoint(J3DJoint*, J3DModel*);
-    /* 80AB3834 */ void createHeapCallBack(fopAc_ac_c*);
-    /* 80AB3854 */ void ctrlJointCallBack(J3DJoint*, int);
-    /* 80AB38A0 */ void setParam();
-    /* 80AB390C */ void main();
-    /* 80AB3964 */ void setAttnPos();
-    /* 80AB3B0C */ bool setMotionAnm(int, f32);
-    /* 80AB3BDC */ void setMotion(int, f32, int);
-    /* 80AB3C24 */ bool drawDbgInfo();
-    /* 80AB3C2C */ void reset();
-    /* 80AB3DBC */ void playMotion();
-    /* 80AB3F54 */ void setAction(bool (daNpcPray_c::*)(void*));
-    /* 80AB3FFC */ void setLookMode(int);
-    /* 80AB4020 */ void lookat();
-    /* 80AB4200 */ void step(s16, int);
-    /* 80AB42F4 */ void chkFindPlayer();
-    /* 80AB43D8 */ void wait(void*);
-    /* 80AB4674 */ void fear(void*);
-    /* 80AB4740 */ void talk(void*);
-    /* 80AB498C */ void demo(void*);
-    /* 80AB4B20 */ void createHeart();
-    /* 80AB4BFC */ void _Evt_GetHeart(int);
-    /* 80AB4CA4 */ void _Evt_GetHeart_CutInit(int const&);
-    /* 80AB4D34 */ void _Evt_GetHeart_CutMain(int const&);
-    /* 80AB5798 */ void adjustShapeAngle();
+    typedef BOOL (daNpcPray_c::*EvtSeq)(int);
 
-    static u8 mEvtSeqList[24];
+    daNpcPray_c();
+    int Create();
+    int CreateHeap();
+    int Delete();
+    int Execute();
+    int Draw();
+    int ctrlJoint(J3DJoint*, J3DModel*);
+    static int createHeapCallBack(fopAc_ac_c*);
+    static int ctrlJointCallBack(J3DJoint*, int);
+    void reset();
+    void playMotion();
+    int setAction(bool (daNpcPray_c::*)(void*));
+    void setLookMode(int);
+    void lookat();
+    bool step(s16, int);
+    bool chkFindPlayer();
+    bool wait(void*);
+    bool fear(void*);
+    bool talk(void*);
+    bool demo(void*);
+    fpc_ProcID createHeart();
+    BOOL _Evt_GetHeart(int);
+    BOOL _Evt_GetHeart_CutInit(int const&);
+    BOOL _Evt_GetHeart_CutMain(int const&);
+    
+    virtual ~daNpcPray_c();
+    virtual void setParam();
+    virtual BOOL main();
+    virtual void adjustShapeAngle() {}
+    virtual void setAttnPos();
+    virtual void setMotionAnm(int, f32);
+    virtual void setMotion(int, f32, int);
+    virtual BOOL drawDbgInfo();
+
+    s16 getMessageNo() { return (fopAcM_GetParam(this) >> 8) & 0xFFFF; } 
+
+    static EvtSeq mEvtSeqList[];
 
 private:
-    /* 0x568 */ u8 field_0x568[0xe10 - 0x568];
+    /* 0xB48 */ Z2CreatureCitizen mSound;
+    /* 0xBEC */ u8 field_0xBEC[0xBF0 - 0xBEC];
+    /* 0xBF0 */ daNpcF_Lookat_c mLookat;
+    /* 0xC8C */ daNpcF_ActorMngr_c mActorMngr[2];
+    /* 0xC9C */ u8 field_0xC9C[0xCA0 - 0xC9C];
+    /* 0xCA0 */ dCcD_Cyl mCcCyl;
+    /* 0xDDC */ bool (daNpcPray_c::*mAction)(void*);
+    /* 0xDE8 */ request_of_phase_process_class mPhase[2];
+    /* 0xDF8 */ int field_0xdf8;
+    /* 0xDFC */ int field_0xdfc;
+    /* 0xE00 */ int field_0xe00;
+    /* 0xE04 */ int mMessageNo;
+    /* 0xE08 */ s16 mLookMode;
+    /* 0xE0A */ s16 field_0xe0a;
+    /* 0xE0C */ u16 mActionMode;
+    /* 0xE0E */ u8 field_0xe0e;
 };
 
 STATIC_ASSERT(sizeof(daNpcPray_c) == 0xe10);
 
+struct daNpcPray_HIOParam {
+    daNpcF_HIOParam common;
+};
+
 class daNpcPray_Param_c {
 public:
-    /* 80AB579C */ ~daNpcPray_Param_c();
+    virtual ~daNpcPray_Param_c() {}
 
-    static u8 const m[108];
+    static const daNpcPray_HIOParam m;
 };
 
 

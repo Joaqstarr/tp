@@ -46,7 +46,7 @@ public:
     };
 
     TParse_TSequence(const void* content) : TParseData_aligned<4>(content) {}
-    /* 802899BC */ void getData(TData*) const;
+    void getData(TData*) const;
 
     const void* get() const { return getRaw(); }
     u32 get_head() const { return *(u32*)get(); }
@@ -62,20 +62,20 @@ public:
     };
 
     TParse_TParagraph(const void* content) : TParseData_aligned<4>(content) {}
-    /* 80289A08 */ void getData(TData*) const;
+    void getData(TData*) const;
 };
 
-struct TParse_TParagraph_data : public TParseData_aligned<4> {
+struct TParse_TParagraph_data : public TParseData {
     struct TData {
         /* 0x00 */ u8 status;
-        /* 0x04 */ u32 dataSize;
-        /* 0x08 */ u32 _8;
-        /* 0x0C */ const void* fileCount;
-        /* 0x10 */ const void* _10;
+        /* 0x04 */ u32 entrySize;
+        /* 0x08 */ u32 entryCount;
+        /* 0x0C */ const void* content;
+        /* 0x10 */ const void* next;
     };
 
-    TParse_TParagraph_data(const void* content) : TParseData_aligned<4>(content) {}
-    /* 80289A80 */ void getData(TData* pData) const;
+    TParse_TParagraph_data(const void* content) : TParseData(content) {}
+    void getData(TData* pData) const;
 };
 
 // Parses a TObject ("demo object")
@@ -90,7 +90,6 @@ public:
 
     u16 get_flag() const { return get()->flag; }
     u16 get_IDSize() const { return get()->id_size; }
-    u32 get_type() const { return get()->type; }
     const void* get_ID() const { return get()->id; }
 };
 

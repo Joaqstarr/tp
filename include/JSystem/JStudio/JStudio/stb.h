@@ -7,20 +7,20 @@
 #include "dolphin/os.h"
 
 namespace JStudio {
-struct TObject;
+class TObject;
 namespace stb {
 
 class TControl;
 
 class TParse : public TParse_header_block {
 public:
-    /* 80289640 */ TParse(TControl*);
-    /* 80289660 */ virtual ~TParse();
-    /* 802896C0 */ virtual bool parseHeader_next(void const**, u32*, u32);
-    /* 8028978C */ virtual bool parseBlock_next(void const**, u32*, u32);
-    /* 802897E0 */ virtual bool parseHeader(data::TParse_THeader const&, u32);
-    /* 802897E8 */ virtual bool parseBlock_block(data::TParse_TBlock const&, u32);
-    /* 80289820 */ virtual bool parseBlock_object(data::TParse_TBlock_object const&, u32);
+    TParse(TControl*);
+    virtual ~TParse();
+    virtual bool parseHeader_next(void const**, u32*, u32);
+    virtual bool parseBlock_next(void const**, u32*, u32);
+    virtual bool parseHeader(data::TParse_THeader const&, u32);
+    virtual bool parseBlock_block(data::TParse_TBlock const&, u32);
+    virtual bool parseBlock_object(data::TParse_TBlock_object const&, u32);
 
     TControl* getControl() const { return pControl; }
 
@@ -38,20 +38,20 @@ public:
         /* 0x8 */ STATUS_INACTIVE = 1 << 3,
     };
 
-    /* 80288AC0 */ TObject(data::TParse_TBlock_object const&);
-    /* 80288A78 */ explicit TObject(u32, void const*, u32);
-    /* 80288B30 */ virtual ~TObject();
+    TObject(data::TParse_TBlock_object const&);
+    explicit TObject(u32, void const*, u32);
+    virtual ~TObject();
 
-    /* 80288B78 */ void setFlag_operation(u8, int);
-    /* 80288BD0 */ void reset(void const*);
-    /* 80288BE8 */ bool forward(u32);
-    /* 80288E18 */ virtual void do_begin();
-    /* 80288E1C */ virtual void do_end();
-    /* 80288E20 */ virtual void do_paragraph(u32, void const*, u32);
-    /* 80288E24 */ virtual void do_wait(u32);
-    /* 80288E28 */ virtual void do_data(void const*, u32, void const*, u32);
-    /* 80288E2C */ void process_sequence_();
-    /* 80288F80 */ void process_paragraph_reserved_(u32, void const*, u32);
+    void setFlag_operation(u8, int);
+    void reset(void const*);
+    bool forward(u32);
+    virtual void do_begin();
+    virtual void do_end();
+    virtual void do_paragraph(u32, void const*, u32);
+    virtual void do_wait(u32);
+    virtual void do_data(void const*, u32, void const*, u32);
+    void process_sequence_();
+    void process_paragraph_reserved_(u32, void const*, u32);
 
     const char* toString_status(int status);
 
@@ -110,30 +110,29 @@ class TFactory {
 public:
     TFactory() {}
 
-    /* 802895B4 */ virtual ~TFactory();
-    /* 802895FC */ virtual JStudio::TObject* create(data::TParse_TBlock_object const&);
-    /* 80289604 */ virtual void destroy(TObject*);
+    virtual ~TFactory();
+    virtual JStudio::TObject* create(data::TParse_TBlock_object const&);
+    virtual void destroy(TObject*);
 };
 
 class TObject_control : public TObject {
 public:
-    /* 80289068 */ TObject_control(void const*, u32);
-    /* 80289134 */ ~TObject_control() {}
+    TObject_control(void const*, u32);
 };
 
 // Manages TObjects
 class TControl {
 public:
-    /* 802890B4 */ TControl();
-    /* 80289194 */ virtual ~TControl();
+    TControl();
+    virtual ~TControl();
 
-    /* 80289228 */ void appendObject(TObject*);
-    /* 80289278 */ void removeObject(TObject*);
-    /* 802892B0 */ void destroyObject(TObject*);
-    /* 80289300 */ void destroyObject_all();
-    /* 80289364 */ TObject* getObject(void const*, u32);
-    /* 80289404 */ void reset();
-    /* 802894B4 */ bool forward(u32);
+    void appendObject(TObject*);
+    void removeObject(TObject*);
+    void destroyObject(TObject*);
+    void destroyObject_all();
+    TObject* getObject(void const*, u32);
+    void reset();
+    bool forward(u32);
 
     void setStatus_(u32 status) { mStatus = status; }
     void resetStatus_() { setStatus_(0); }
@@ -156,11 +155,10 @@ private:
     /* 0x54 */ s32 _54;
 };
 
-template <int T>
+template <int S>
 struct TParseData : public data::TParse_TParagraph_data::TData {
     TParseData(const void* pContent) {
-        data::TParse_TParagraph_data data(pContent);
-        set(data);
+        set(data::TParse_TParagraph_data(pContent));
     }
 
     TParseData() {
@@ -171,44 +169,56 @@ struct TParseData : public data::TParse_TParagraph_data::TData {
         data.getData(this);
     }
 
+    void set(const void* pContent) {
+        set(data::TParse_TParagraph_data(pContent));
+    }
+
     bool isEnd() const {
         return status == 0;
     }
 
     bool empty() const {
-        return fileCount == NULL;
+        return content == NULL;
     }
 
     bool isValid() const {
-        return !empty() && status == 50;
+        return !empty() && status == S;
     }
 
-    const void* getContent() const { return fileCount; }
+    const void* getContent() const { return content; }
 
-    u32 size() const { return dataSize; }
+    u32 size() const { return entryCount; }
 };
 
-template <int T, class Iterator=JGadget::binary::TValueIterator_raw<u8> >
-struct TParseData_fixed : public TParseData<T> {
-    TParseData_fixed(const void* pContent) : TParseData<T>(pContent) {}
-    TParseData_fixed() : TParseData<T>() {}
+template <int S, class Iterator=JGadget::binary::TValueIterator_raw<u8> >
+struct TParseData_fixed : public TParseData<S> {
+    TParseData_fixed(const void* pContent) : TParseData<S>(pContent) {}
+    TParseData_fixed() : TParseData<S>() {}
 
     const void* getNext() const {
-        return _10;
+        return this->next;
     }
 
     bool isValid() const {
-        return TParseData::isValid() && getNext() != NULL;
+        return TParseData<S>::isValid() && getNext() != NULL;
     }
 
     Iterator begin() const {
-        return Iterator(fileCount);
+        return Iterator(this->content);
     }
 
     Iterator end() const {
-        Iterator i(fileCount);
-        i += size();
+        Iterator i(this->content);
+        i += this->size();
         return i;
+    }
+
+    typename Iterator::ValueType front() const {
+        return *begin();
+    }
+
+    typename Iterator::ValueType back() const {
+        return *--end();
     }
 };
 

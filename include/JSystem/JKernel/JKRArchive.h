@@ -202,12 +202,12 @@ public:
 
     static JKRCompression convertAttrToCompressionType(u32 attr) {
 #define JKRARCHIVE_ATTR_COMPRESSION 0x04
-#define JKRARCHIVE_ATTR_YAY0 0x80
+#define JKRARCHIVE_ATTR_YAZ0 0x80
 
         JKRCompression compression;
-        if (FLAG_ON(attr, JKRARCHIVE_ATTR_COMPRESSION)) {
+        if (!(attr & JKRARCHIVE_ATTR_COMPRESSION)) {
             compression = COMPRESSION_NONE;
-        } else if (!FLAG_ON(attr, JKRARCHIVE_ATTR_YAY0)) {
+        } else if (attr & JKRARCHIVE_ATTR_YAZ0) {
             compression = COMPRESSION_YAZ0;
         } else {
             compression = COMPRESSION_YAY0;
@@ -247,8 +247,8 @@ inline void JKRUnmountArchive(JKRArchive* arc) {
     arc->unmount();
 }
 
-inline void JKRReadIdxResource(void* param_1, u32 param_2, u32 param_3, JKRArchive* param_4) {
-    param_4->readIdxResource(param_1, param_2, param_3);
+inline u32 JKRReadIdxResource(void* buffer, u32 bufsize, u32 resIdx, JKRArchive* archive) {
+    return archive->readIdxResource(buffer, bufsize, resIdx);
 }
 
 #endif

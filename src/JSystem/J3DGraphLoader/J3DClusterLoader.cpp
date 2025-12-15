@@ -2,6 +2,8 @@
 // J3DClusterLoader
 //
 
+#include "JSystem/JSystem.h" // IWYU pragma: keep
+
 #include "JSystem/J3DGraphLoader/J3DClusterLoader.h"
 #include "JSystem/J3DGraphAnimator/J3DSkinDeform.h"
 #include "JSystem/JSupport/JSupport.h"
@@ -9,7 +11,6 @@
 #include "dolphin/os.h"
 #include "string.h"
 
-/* 80334130-803341CC 32EA70 009C+00 0/0 1/1 0/0 .text load__24J3DClusterLoaderDataBaseFPCv */
 void* J3DClusterLoaderDataBase::load(const void* i_data) {
     const JUTDataFileHeader* fileHeader = (JUTDataFileHeader*)i_data;
     if (fileHeader->mMagic == 'J3D1' && fileHeader->mType == 'bls1') {
@@ -21,13 +22,10 @@ void* J3DClusterLoaderDataBase::load(const void* i_data) {
     return NULL;
 }
 
-/* 803341CC-803341E8 32EB0C 001C+00 1/1 0/0 0/0 .text            __ct__20J3DClusterLoader_v15Fv */
 J3DClusterLoader_v15::J3DClusterLoader_v15() {}
 
-/* 803341E8-80334244 32EB28 005C+00 2/1 0/0 0/0 .text            __dt__20J3DClusterLoader_v15Fv */
 J3DClusterLoader_v15::~J3DClusterLoader_v15() {}
 
-/* 80334244-803342F8 32EB84 00B4+00 2/1 0/0 0/0 .text            load__20J3DClusterLoader_v15FPCv */
 void* J3DClusterLoader_v15::load(const void* i_data) {
     mpDeformData = new J3DDeformData();
 
@@ -48,8 +46,6 @@ void* J3DClusterLoader_v15::load(const void* i_data) {
     return mpDeformData;
 }
 
-/* 803342F8-803345FC 32EC38 0304+00 1/1 0/0 0/0 .text
- * readCluster__20J3DClusterLoader_v15FPC15J3DClusterBlock      */
 void J3DClusterLoader_v15::readCluster(const J3DClusterBlock* block) {
     mpDeformData->mClusterNum = block->mClusterNum;
     mpDeformData->mClusterKeyNum = block->mClusterKeyNum;
@@ -114,5 +110,3 @@ void J3DClusterLoader_v15::readCluster(const J3DClusterBlock* block) {
 
     DCStoreRange(arr, vtxPosSize);
 }
-
-/* 803A2098-803A2098 02E6F8 0000+00 0/0 0/0 0/0 .rodata          @stringBase0 */

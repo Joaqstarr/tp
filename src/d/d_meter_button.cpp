@@ -3,6 +3,8 @@
  * UI Button handling
  */
 
+#include "d/dolzel.h" // IWYU pragma: keep
+
 #include "d/d_meter_button.h"
 #include "JSystem/J2DGraph/J2DGrafContext.h"
 #include "d/actor/d_a_player.h"
@@ -15,27 +17,26 @@
 #include "d/d_msg_string.h"
 #include "d/d_pane_class.h"
 
-extern "C" extern dMsgObject_HIO_c g_MsgObject_HIO_c;
+#if VERSION == VERSION_GCN_JPN
+#define STR_BUF_LEN 528
+#else
+#define STR_BUF_LEN 512
+#endif
 
-/* 80201328-80201370 1FBC68 0048+00 0/0 1/1 1/1 .text            __ct__14dMeterButton_cFv */
 dMeterButton_c::dMeterButton_c() {
     _create();
 }
 
-/* 80201370-802013CC 1FBCB0 005C+00 1/0 0/0 0/0 .text            __dt__14dMeterButton_cFv */
 dMeterButton_c::~dMeterButton_c() {
     _delete();
 }
 
-/* 802013CC-80201404 1FBD0C 0038+00 1/1 0/0 0/0 .text            _create__14dMeterButton_cFv */
 int dMeterButton_c::_create() {
     screenInitButton();
     screenInitText();
     return cPhs_COMPLEATE_e;
 }
 
-/* 80201404-80202240 1FBD44 0E3C+00 0/0 1/1 0/0 .text
- * _execute__14dMeterButton_cFUlbbbbbbbbbbbbbbbbbbbbbb          */
 int dMeterButton_c::_execute(u32 i_flags, bool i_drawA, bool i_drawB, bool i_drawR, bool i_drawZ,
                              bool i_draw3D, bool i_drawC, bool i_drawS, bool i_drawX, bool i_drawY,
                              bool i_drawNun, bool i_drawRemo, bool i_drawRemo2, bool i_drawAR,
@@ -239,7 +240,6 @@ int dMeterButton_c::_execute(u32 i_flags, bool i_drawA, bool i_drawB, bool i_dra
     return 1;
 }
 
-/* 80202240-80202A9C 1FCB80 085C+00 1/0 0/0 0/0 .text            draw__14dMeterButton_cFv */
 void dMeterButton_c::draw() {
     J2DGrafContext* graf_ctx = dComIfGp_getCurrentGrafPort();
     graf_ctx->setup2D();
@@ -254,12 +254,17 @@ void dMeterButton_c::draw() {
     }
 
     if (mMsgID != 0xFFFF) {
-        char tmp_buf[512];
+        char tmp_buf[STR_BUF_LEN];
         strcpy(tmp_buf, static_cast<J2DTextBox*>(mpTm_c[0]->getPanePtr())->getStringPtr());
         mpTextScreen->draw(0.0f, 0.0f, graf_ctx);
 
+#if VERSION == VERSION_GCN_JPN
+        mpString_c->getString(mMsgID, static_cast<J2DTextBox*>(mpTm_c[0]->getPanePtr()), NULL, NULL,
+                              NULL, 12);
+#else
         mpString_c->getString(mMsgID, static_cast<J2DTextBox*>(mpTm_c[0]->getPanePtr()), NULL, NULL,
                               NULL, 8);
+#endif
         mpString_c->drawOutFont(static_cast<J2DTextBox*>(mpTm_c[0]->getPanePtr()), -1.0f);
         strcpy(static_cast<J2DTextBox*>(mpTm_c[0]->getPanePtr())->getStringPtr(), tmp_buf);
     }
@@ -415,7 +420,6 @@ void dMeterButton_c::draw() {
     dMeter2Info_resetBlinkButton();
 }
 
-/* 80202A9C-802032C4 1FD3DC 0828+00 1/1 0/0 0/0 .text            _delete__14dMeterButton_cFv */
 int dMeterButton_c::_delete() {
     dMeter2Info_resetFloatingMessage();
 
@@ -608,7 +612,6 @@ int dMeterButton_c::_delete() {
     return 1;
 }
 
-/* 802032C4-8020339C 1FDC04 00D8+00 1/1 0/0 0/0 .text alphaAnimeButtonA__14dMeterButton_cFUlb */
 bool dMeterButton_c::alphaAnimeButtonA(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton ||
         mButtonTimers[BUTTON_A_e] > 0 || (i_flags & 0x80) || (i_flags & 0x40000000) ||
@@ -625,7 +628,6 @@ bool dMeterButton_c::alphaAnimeButtonA(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 8020339C-802034A8 1FDCDC 010C+00 1/1 0/0 0/0 .text alphaAnimeButtonB__14dMeterButton_cFUlb */
 bool dMeterButton_c::alphaAnimeButtonB(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton ||
         mButtonTimers[BUTTON_B_e] > 0 || (i_flags & 0x80) || (i_flags & 0x40000000) ||
@@ -643,7 +645,6 @@ bool dMeterButton_c::alphaAnimeButtonB(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 802034A8-802035AC 1FDDE8 0104+00 1/1 0/0 0/0 .text alphaAnimeButtonR__14dMeterButton_cFUlb */
 bool dMeterButton_c::alphaAnimeButtonR(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton ||
         mButtonTimers[BUTTON_R_e] > 0 || (i_flags & 0x40000000) ||
@@ -661,7 +662,6 @@ bool dMeterButton_c::alphaAnimeButtonR(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 802035AC-802036C0 1FDEEC 0114+00 1/1 0/0 0/0 .text alphaAnimeButtonZ__14dMeterButton_cFUlb */
 bool dMeterButton_c::alphaAnimeButtonZ(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton ||
         mButtonTimers[BUTTON_Z_e] > 0 || (i_flags & 0x80) || (i_flags & 0x40000000) ||
@@ -679,7 +679,6 @@ bool dMeterButton_c::alphaAnimeButtonZ(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 802036C0-802037B8 1FE000 00F8+00 1/1 0/0 0/0 .text alphaAnimeButton3D__14dMeterButton_cFUlb */
 bool dMeterButton_c::alphaAnimeButton3D(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton ||
         mButtonTimers[BUTTON_3D_e] > 0 || (i_flags & 8) || (i_flags & 0x10) || (i_flags & 0x20))
@@ -703,7 +702,6 @@ bool dMeterButton_c::alphaAnimeButton3D(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 802037B8-80203878 1FE0F8 00C0+00 1/1 0/0 0/0 .text alphaAnimeButtonC__14dMeterButton_cFUlb */
 bool dMeterButton_c::alphaAnimeButtonC(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton ||
         mButtonTimers[BUTTON_C_e] > 0 || (i_flags & 8) || (i_flags & 0x10) || (i_flags & 0x20))
@@ -719,7 +717,6 @@ bool dMeterButton_c::alphaAnimeButtonC(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 80203878-802038F4 1FE1B8 007C+00 1/1 0/0 0/0 .text alphaAnimeButtonS__14dMeterButton_cFUlb */
 bool dMeterButton_c::alphaAnimeButtonS(u32 i_flags, bool i_drawButton) {
     if (!i_drawButton || (i_flags & 8) || (i_flags & 0x10) || (i_flags & 0x20)) {
         setAlphaButtonSAnimeMin();
@@ -733,7 +730,6 @@ bool dMeterButton_c::alphaAnimeButtonS(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 802038F4-80203A08 1FE234 0114+00 1/1 0/0 0/0 .text alphaAnimeButtonX__14dMeterButton_cFUlb */
 bool dMeterButton_c::alphaAnimeButtonX(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton ||
         mButtonTimers[BUTTON_X_e] > 0 || (i_flags & 0x80) || (i_flags & 0x40000000) ||
@@ -751,7 +747,6 @@ bool dMeterButton_c::alphaAnimeButtonX(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 80203A08-80203B1C 1FE348 0114+00 1/1 0/0 0/0 .text alphaAnimeButtonY__14dMeterButton_cFUlb */
 bool dMeterButton_c::alphaAnimeButtonY(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton ||
         mButtonTimers[BUTTON_Y_e] > 0 || (i_flags & 0x80) || (i_flags & 0x40000000) ||
@@ -769,7 +764,6 @@ bool dMeterButton_c::alphaAnimeButtonY(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 80203B1C-80203C30 1FE45C 0114+00 1/1 0/0 0/0 .text alphaAnimeButtonNun__14dMeterButton_cFUlb */
 bool dMeterButton_c::alphaAnimeButtonNun(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton ||
         mButtonTimers[BUTTON_NUN_e] > 0 || (i_flags & 0x80) || (i_flags & 0x40000000) ||
@@ -787,8 +781,6 @@ bool dMeterButton_c::alphaAnimeButtonNun(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 80203C30-80203D44 1FE570 0114+00 1/1 0/0 0/0 .text alphaAnimeButtonRemo__14dMeterButton_cFUlb
- */
 bool dMeterButton_c::alphaAnimeButtonRemo(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton ||
         mButtonTimers[BUTTON_REMO_e] > 0 || (i_flags & 0x80) || (i_flags & 0x40000000) ||
@@ -806,8 +798,6 @@ bool dMeterButton_c::alphaAnimeButtonRemo(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 80203D44-80203E58 1FE684 0114+00 1/1 0/0 0/0 .text alphaAnimeButtonRemo2__14dMeterButton_cFUlb
- */
 bool dMeterButton_c::alphaAnimeButtonRemo2(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton ||
         mButtonTimers[BUTTON_REMO2_e] > 0 || (i_flags & 0x80) || (i_flags & 0x40000000) ||
@@ -825,7 +815,6 @@ bool dMeterButton_c::alphaAnimeButtonRemo2(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 80203E58-80203F60 1FE798 0108+00 1/1 0/0 0/0 .text alphaAnimeButtonAR__14dMeterButton_cFUlb */
 bool dMeterButton_c::alphaAnimeButtonAR(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton || (i_flags & 0x80) ||
         (i_flags & 0x40000000) || (i_flags & 0x1000) ||
@@ -843,7 +832,6 @@ bool dMeterButton_c::alphaAnimeButtonAR(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 80203F60-80204068 1FE8A0 0108+00 1/1 0/0 0/0 .text alphaAnimeButton3DB__14dMeterButton_cFUlb */
 bool dMeterButton_c::alphaAnimeButton3DB(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton || (i_flags & 0x80) ||
         (i_flags & 0x40000000) || (i_flags & 0x1000) ||
@@ -861,8 +849,6 @@ bool dMeterButton_c::alphaAnimeButton3DB(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 80204068-80204170 1FE9A8 0108+00 1/1 0/0 0/0 .text alphaAnimeButtonNURE__14dMeterButton_cFUlb
- */
 bool dMeterButton_c::alphaAnimeButtonNURE(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton || (i_flags & 0x80) ||
         (i_flags & 0x40000000) || (i_flags & 0x1000) ||
@@ -880,8 +866,6 @@ bool dMeterButton_c::alphaAnimeButtonNURE(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 80204170-80204278 1FEAB0 0108+00 1/1 0/0 0/0 .text alphaAnimeButtonReel__14dMeterButton_cFUlb
- */
 bool dMeterButton_c::alphaAnimeButtonReel(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton || (i_flags & 0x80) ||
         (i_flags & 0x40000000) || (i_flags & 0x1000) ||
@@ -899,8 +883,6 @@ bool dMeterButton_c::alphaAnimeButtonReel(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 80204278-80204368 1FEBB8 00F0+00 1/1 0/0 0/0 .text alphaAnimeButtonReel2__14dMeterButton_cFUlb
- */
 bool dMeterButton_c::alphaAnimeButtonReel2(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton || (i_flags & 0x80) ||
         (i_flags & 0x40000000) || (i_flags & 0x1000) ||
@@ -918,7 +900,6 @@ bool dMeterButton_c::alphaAnimeButtonReel2(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 80204368-80204458 1FECA8 00F0+00 1/1 0/0 0/0 .text alphaAnimeButtonAB__14dMeterButton_cFUlb */
 bool dMeterButton_c::alphaAnimeButtonAB(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton || (i_flags & 0x80) ||
         (i_flags & 0x40000000) || (i_flags & 0x1000) ||
@@ -936,8 +917,6 @@ bool dMeterButton_c::alphaAnimeButtonAB(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 80204458-80204548 1FED98 00F0+00 1/1 0/0 0/0 .text alphaAnimeButtonTate__14dMeterButton_cFUlb
- */
 bool dMeterButton_c::alphaAnimeButtonTate(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton || (i_flags & 0x80) ||
         (i_flags & 0x40000000) || (i_flags & 0x1000) ||
@@ -955,8 +934,6 @@ bool dMeterButton_c::alphaAnimeButtonTate(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 80204548-80204620 1FEE88 00D8+00 1/1 0/0 0/0 .text alphaAnimeButtonNunZ__14dMeterButton_cFUlb
- */
 bool dMeterButton_c::alphaAnimeButtonNunZ(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton ||
         ((i_flags & 0x40) && dComIfGp_event_checkHind(1)) || (i_flags & 0x100) || (i_flags & 8) ||
@@ -973,8 +950,6 @@ bool dMeterButton_c::alphaAnimeButtonNunZ(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 80204620-802046F8 1FEF60 00D8+00 1/1 0/0 0/0 .text alphaAnimeButtonNunC__14dMeterButton_cFUlb
- */
 bool dMeterButton_c::alphaAnimeButtonNunC(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton ||
         ((i_flags & 0x40) && dComIfGp_event_checkHind(1)) || (i_flags & 0x100) || (i_flags & 8) ||
@@ -991,7 +966,6 @@ bool dMeterButton_c::alphaAnimeButtonNunC(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 802046F8-802047E8 1FF038 00F0+00 1/1 0/0 0/0 .text alphaAnimeButtonBin__14dMeterButton_cFUlb */
 bool dMeterButton_c::alphaAnimeButtonBin(u32 i_flags, bool i_drawButton) {
     if ((i_flags & 0x4000) || dMsgObject_isTalkNowCheck() || !i_drawButton || (i_flags & 0x80) ||
         (i_flags & 0x40000000) || (i_flags & 0x1000) ||
@@ -1009,7 +983,6 @@ bool dMeterButton_c::alphaAnimeButtonBin(u32 i_flags, bool i_drawButton) {
     return false;
 }
 
-/* 802047E8-80205834 1FF128 104C+00 1/1 0/0 0/0 .text screenInitButton__14dMeterButton_cFv */
 void dMeterButton_c::screenInitButton() {
     static u64 const text_tag[] = {
         'info_ar0', 'info_ar1', 'info_ar2', 'info_ar3', 'info_ar4',
@@ -1024,7 +997,7 @@ void dMeterButton_c::screenInitButton() {
     OS_REPORT("enter dMeterButton_c::screenInitButton\n");
 
     mpButtonScreen = new J2DScreen();
-    JUT_ASSERT(0, mpButtonScreen != 0);
+    JUT_ASSERT(0, mpButtonScreen != NULL);
 
     OS_REPORT("load zelda_game_image_button_info.blo");
 
@@ -1041,7 +1014,7 @@ void dMeterButton_c::screenInitButton() {
         OS_REPORT("[%s] %d\n", __FILE__, __LINE__);
     }
 
-    JUT_ASSERT(0, mpParent != 0);
+    JUT_ASSERT(0, mpParent != NULL);
 
     for (int i = 0; i < BUTTON_NUM; i++) {
         field_0x18c[i] = 0.0f;
@@ -1067,7 +1040,7 @@ void dMeterButton_c::screenInitButton() {
     if (mpButtonA == NULL) {
         OS_REPORT("[%s] %d\n", __FILE__, __LINE__);
     }
-    JUT_ASSERT(0, mpButtonA != 0);
+    JUT_ASSERT(0, mpButtonA != NULL);
     mpButtonA->setAlphaRate(0.0f);
     mpButtonA->show();
 
@@ -1075,7 +1048,7 @@ void dMeterButton_c::screenInitButton() {
     if (mpButtonB == NULL) {
         OS_REPORT("[%s] %d\n", __FILE__, __LINE__);
     }
-    JUT_ASSERT(0, mpButtonB != 0);
+    JUT_ASSERT(0, mpButtonB != NULL);
     mpButtonB->setAlphaRate(0.0f);
     mpButtonB->show();
 
@@ -1083,12 +1056,12 @@ void dMeterButton_c::screenInitButton() {
     if (mpButtonR == NULL) {
         OS_REPORT("[%s] %d\n", __FILE__, __LINE__);
     }
-    JUT_ASSERT(0, mpButtonR != 0);
+    JUT_ASSERT(0, mpButtonR != NULL);
     mpButtonR->setAlphaRate(0.0f);
     mpButtonR->show();
 
     mpMidona = new CPaneMgr(mpButtonScreen, 'midona', 0, NULL);
-    JUT_ASSERT(0, mpMidona != 0);
+    JUT_ASSERT(0, mpMidona != NULL);
     if (mpMidona == NULL) {
         OS_REPORT("[%s] %d\n", __FILE__, __LINE__);
     }
@@ -1104,12 +1077,12 @@ void dMeterButton_c::screenInitButton() {
     if (mpButtonZ == NULL) {
         OS_REPORT("[%s] %d\n", __FILE__, __LINE__);
     }
-    JUT_ASSERT(0, mpButtonZ != 0);
+    JUT_ASSERT(0, mpButtonZ != NULL);
     mpButtonZ->setAlphaRate(0.0f);
     mpButtonZ->show();
 
     mpButton3D = new CPaneMgr(mpButtonScreen, 'asbtn_n', 2, NULL);
-    JUT_ASSERT(0, mpButton3D != 0);
+    JUT_ASSERT(0, mpButton3D != NULL);
     mpButton3D->setAlphaRate(0.0f);
     mpButton3D->show();
 
@@ -1119,7 +1092,7 @@ void dMeterButton_c::screenInitButton() {
     mpButtonScreen->search('yaji_r_n')->hide();
 
     mpButtonC = new CPaneMgr(mpButtonScreen, 'cbtn_n', 2, NULL);
-    JUT_ASSERT(0, mpButtonC != 0);
+    JUT_ASSERT(0, mpButtonC != NULL);
     mpButtonC->setAlphaRate(0.0f);
     mpButtonC->show();
 
@@ -1129,15 +1102,15 @@ void dMeterButton_c::screenInitButton() {
     mpButtonScreen->search('yaji_rn')->hide();
 
     mpButtonS = new CPaneMgr(mpButtonScreen, 'sbtn_n', 2, NULL);
-    JUT_ASSERT(0, mpButtonS != 0);
+    JUT_ASSERT(0, mpButtonS != NULL);
     mpButtonS->setAlphaRate(0.0f);
 
     mpButtonX = new CPaneMgr(mpButtonScreen, 'xbtn_n', 2, NULL);
-    JUT_ASSERT(0, mpButtonX != 0);
+    JUT_ASSERT(0, mpButtonX != NULL);
     mpButtonX->setAlphaRate(0.0f);
 
     mpButtonY = new CPaneMgr(mpButtonScreen, 'ybtn_n', 2, NULL);
-    JUT_ASSERT(0, mpButtonY != 0);
+    JUT_ASSERT(0, mpButtonY != NULL);
     mpButtonY->setAlphaRate(0.0f);
 
     mpButtonNun = NULL;
@@ -1146,7 +1119,7 @@ void dMeterButton_c::screenInitButton() {
     mpButtonAR = NULL;
 
     mpButton3DB = new CPaneMgr(mpButtonScreen, 'as_b_n', 2, NULL);
-    JUT_ASSERT(0, mpButton3DB != 0);
+    JUT_ASSERT(0, mpButton3DB != NULL);
     mpButton3DB->setAlphaRate(0.0f);
 
     mpButtonNURE = NULL;
@@ -1158,24 +1131,24 @@ void dMeterButton_c::screenInitButton() {
     mpButtonNunC = NULL;
 
     mpButtonBin = new CPaneMgr(mpButtonScreen, 'bottl_n', 2, NULL);
-    JUT_ASSERT(0, mpButtonBin != 0);
+    JUT_ASSERT(0, mpButtonBin != NULL);
     mpButtonBin->setAlphaRate(0.0f);
 
     mpText[0] = new CPaneMgr(mpButtonScreen, 'text_n', 2, NULL);
-    JUT_ASSERT(0, mpText[0] != 0);
+    JUT_ASSERT(0, mpText[0] != NULL);
     mpText[0]->setAlphaRate(0.0f);
 
     mpText[1] = new CPaneMgr(mpButtonScreen, 'text2_n', 2, NULL);
-    JUT_ASSERT(0, mpText[1] != 0);
+    JUT_ASSERT(0, mpText[1] != NULL);
     mpText[1]->setAlphaRate(0.0f);
 
     mpItem_c = new CPaneMgr(mpButtonScreen, 'fishing', 0, NULL);
-    JUT_ASSERT(0, mpItem_c != 0);
+    JUT_ASSERT(0, mpItem_c != NULL);
     mpItem_c->setAlphaRate(0.0f);
 
     mpHeap = mDoExt_getCurrentHeap();
     mpFishingTex = mpHeap->alloc(0xC00, 0x20);
-    JUT_ASSERT(0, mpFishingTex != 0);
+    JUT_ASSERT(0, mpFishingTex != NULL);
 
     u8 fishing_item = dComIfGs_getItem(SLOT_20, false);
     if (dMeter2Info_getMeterClass()->getMeterDrawPtr()->getCanoeFishing()) {
@@ -1192,8 +1165,13 @@ void dMeterButton_c::screenInitButton() {
     field_0x4d9 = 0xFF;
 
     for (int i = 0; i < 10; i++) {
+#if VERSION == VERSION_GCN_JPN
+        mpTextBox[i] = (J2DTextBox*)mpButtonScreen->search(text_tag[i]);
+        mpButtonScreen->search(ftext_tag[i])->hide();
+#else
         mpTextBox[i] = (J2DTextBox*)mpButtonScreen->search(ftext_tag[i]);
         mpButtonScreen->search(text_tag[i])->hide();
+#endif
 
         mpTextBox[i]->setFont(mDoExt_getMesgFont());
         mpTextBox[i]->setString(32, "");
@@ -1413,11 +1391,9 @@ void dMeterButton_c::screenInitButton() {
     OS_REPORT("exit dMeterButton_c::screenInitButton\n");
 }
 
-/* 80205834-80205CA0 200174 046C+00 1/1 0/0 0/0 .text            screenInitText__14dMeterButton_cFv
- */
 void dMeterButton_c::screenInitText() {
     mpScreen = new J2DScreen();
-    JUT_ASSERT(0, mpScreen != 0);
+    JUT_ASSERT(0, mpScreen != NULL);
 
     OS_REPORT("enter dMeterButton_c::screenInitText(void)\n");
 
@@ -1429,7 +1405,7 @@ void dMeterButton_c::screenInitText() {
 
     mpFkAll_c = new CPaneMgr(mpScreen, 'n_all', 2, NULL);
     OS_REPORT("[%s] %d\n", __FILE__, __LINE__);
-    JUT_ASSERT(0, mpFkAll_c != 0);
+    JUT_ASSERT(0, mpFkAll_c != NULL);
     mpFkAll_c->setAlphaRate(0.0f);
     OS_REPORT("[%s] %d\n", __FILE__, __LINE__);
 
@@ -1439,11 +1415,11 @@ void dMeterButton_c::screenInitText() {
     OS_REPORT("[%s] %d\n", __FILE__, __LINE__);
 
     mpFkRoot_c = new CPaneMgr(mpScreen, 'mg_null', 0, NULL);
-    JUT_ASSERT(0, mpFkRoot_c != 0);
+    JUT_ASSERT(0, mpFkRoot_c != NULL);
     OS_REPORT("[%s] %d\n", __FILE__, __LINE__);
 
     mpTextScreen = new J2DScreen();
-    JUT_ASSERT(0, mpTextScreen != 0);
+    JUT_ASSERT(0, mpTextScreen != NULL);
     OS_REPORT("[%s] %d\n", __FILE__, __LINE__);
 
     fg = mpTextScreen->setPriority("zelda_message_window_text.blo", 0x20000,
@@ -1454,13 +1430,40 @@ void dMeterButton_c::screenInitText() {
     OS_REPORT("[%s] %d\n", __FILE__, __LINE__);
 
     mpTmRoot_c = new CPaneMgr(mpTextScreen, 'mg_null', 0, NULL);
-    JUT_ASSERT(0, mpTmRoot_c != 0);
+    JUT_ASSERT(0, mpTmRoot_c != NULL);
 
+#if VERSION == VERSION_GCN_JPN
+    if (dComIfGs_getOptUnk0() == 0) {
+        mpTm_c[0] = new CPaneMgr(mpTextScreen, 'mg_3flin', 0, NULL);
+
+        mpTm_c[1] = new CPaneMgr(mpTextScreen, 't3f_s', 0, NULL);
+
+        field_0x0ec[0] = new CPaneMgr(mpTextScreen, 'mg_3f', 0, NULL);
+
+        field_0x0ec[1] = new CPaneMgr(mpTextScreen, 'mg_3f_s', 0, NULL);
+
+        mpTextScreen->search('n_3line')->hide();
+        mpTextScreen->search('n_3fline')->show();
+        mpTextScreen->search('n_e4line')->hide();
+    } else {
+        mpTm_c[0] = new CPaneMgr(mpTextScreen, 'mg_3line', 0, NULL);
+
+        mpTm_c[1] = new CPaneMgr(mpTextScreen, 't3_s', 0, NULL);
+
+        field_0x0ec[0] = NULL;
+        field_0x0ec[1] = NULL;
+        OS_REPORT("[%s] %d\n", __FILE__, __LINE__);
+
+        mpTextScreen->search('n_3line')->show();
+        mpTextScreen->search('n_3fline')->hide();
+        mpTextScreen->search('n_e4line')->hide();
+    }
+#else
     mpTm_c[0] = new CPaneMgr(mpTextScreen, 'mg_e4lin', 0, NULL);
-    JUT_ASSERT(0, mpTm_c[0] != 0);
+    JUT_ASSERT(0, mpTm_c[0] != NULL);
 
     mpTm_c[1] = new CPaneMgr(mpTextScreen, 't4_s', 0, NULL);
-    JUT_ASSERT(0, mpTm_c[1] != 0);
+    JUT_ASSERT(0, mpTm_c[1] != NULL);
 
     field_0x0ec[0] = NULL;
     field_0x0ec[1] = NULL;
@@ -1469,16 +1472,26 @@ void dMeterButton_c::screenInitText() {
     mpTextScreen->search('n_3line')->hide();
     mpTextScreen->search('n_3fline')->hide();
     mpTextScreen->search('n_e4line')->show();
+#endif
+
     OS_REPORT("[%s] %d\n", __FILE__, __LINE__);
 
     f32 line_space = static_cast<J2DTextBox*>(mpTm_c[0]->getPanePtr())->getLineSpace();
     for (int i = 0; i < 2; i++) {
         static_cast<J2DTextBox*>(mpTm_c[i]->getPanePtr())->setFont(mDoExt_getMesgFont());
+#if VERSION == VERSION_GCN_JPN
+        static_cast<J2DTextBox*>(mpTm_c[i]->getPanePtr())->setString(0x210, "");
+#else
         static_cast<J2DTextBox*>(mpTm_c[i]->getPanePtr())->setString(0x200, "");
+#endif
 
         if (field_0x0ec[i] != NULL) {
             static_cast<J2DTextBox*>(field_0x0ec[i]->getPanePtr())->setFont(mDoExt_getMesgFont());
+#if VERSION == VERSION_GCN_JPN
+            static_cast<J2DTextBox*>(field_0x0ec[i]->getPanePtr())->setString(0x210, "");
+#else
             static_cast<J2DTextBox*>(field_0x0ec[i]->getPanePtr())->setString(0x200, "");
+#endif
             static_cast<J2DTextBox*>(field_0x0ec[i]->getPanePtr())->setLineSpace(line_space);
         }
     }
@@ -1491,13 +1504,12 @@ void dMeterButton_c::screenInitText() {
     OS_REPORT("[%s] %d\n", __FILE__, __LINE__);
 
     mpOutFont = new COutFont_c(0);
-    JUT_ASSERT(0, mpOutFont != 0);
+    JUT_ASSERT(0, mpOutFont != NULL);
     mpOutFont->createPane();
 
     OS_REPORT("exit dMeterButton_c::screenInitText(void)\n");
 }
 
-/* 80205CA0-80206978 2005E0 0CD8+00 2/2 0/0 0/0 .text            updateButton__14dMeterButton_cFv */
 void dMeterButton_c::updateButton() {
     f32 parent_x_offset = 0.0f;
     f32 parent_y_offset = 0.0f;
@@ -1828,7 +1840,6 @@ void dMeterButton_c::updateButton() {
     }
 }
 
-/* 80206978-80206CE0 2012B8 0368+00 1/1 0/0 0/0 .text            updateText__14dMeterButton_cFUl */
 void dMeterButton_c::updateText(u32 i_flags) {
     if (dMeter2Info_isFloatingMessageWakuVisible()) {
         mpFkAll_c->paneTrans(g_drawHIO.mFloatingMessagePosX, 0.0f);
@@ -1846,9 +1857,9 @@ void dMeterButton_c::updateText(u32 i_flags) {
                 tbox = static_cast<J2DTextBox*>(field_0x0ec[0]->getPanePtr());
             }
 
-            char buf1[512];
-            char buf2[512];
-            char buf3[512];
+            char buf1[STR_BUF_LEN];
+            char buf2[STR_BUF_LEN];
+            char buf3[STR_BUF_LEN];
 
             if (dMsgObject_getString(dMeter2Info_getFloatingMessageID(),
                                      static_cast<J2DTextBox*>(mpTm_c[0]->getPanePtr()), tbox,
@@ -1912,8 +1923,6 @@ void dMeterButton_c::updateText(u32 i_flags) {
     }
 }
 
-/* 80206CE0-80206D70 201620 0090+00 1/1 0/0 0/0 .text setAlphaButtonAAnimeMin__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonAAnimeMin() {
     if (mpButtonA->getAlphaRate() != 0.0f) {
         if (mButtonTimers[BUTTON_A_e] == 0) {
@@ -1930,7 +1939,6 @@ void dMeterButton_c::setAlphaButtonAAnimeMin() {
     }
 }
 
-/* 80206D70-80207060 2016B0 02F0+00 5/5 0/0 0/0 .text            isFastSet__14dMeterButton_cFi */
 bool dMeterButton_c::isFastSet(int param_0) {
     if ((dComIfGp_isDoSetFlag(1) && field_0x4be[param_0] == BUTTON_A_e) ||
         (dComIfGp_isASetFlag(1) && field_0x4be[param_0] == BUTTON_B_e) ||
@@ -1966,8 +1974,6 @@ bool dMeterButton_c::isFastSet(int param_0) {
     return false;
 }
 
-/* 80207060-8020714C 2019A0 00EC+00 1/1 0/0 0/0 .text setAlphaButtonAAnimeMax__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonAAnimeMax() {
     if (mpButtonA->getAlphaRate() != 1.0f) {
         if (dComIfGp_isDoSetFlag(1)) {
@@ -1985,8 +1991,6 @@ void dMeterButton_c::setAlphaButtonAAnimeMax() {
     }
 }
 
-/* 8020714C-802071DC 201A8C 0090+00 1/1 0/0 0/0 .text setAlphaButtonBAnimeMin__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonBAnimeMin() {
     if (mpButtonB->getAlphaRate() != 0.0f) {
         if (mButtonTimers[BUTTON_B_e] == 0) {
@@ -2003,8 +2007,6 @@ void dMeterButton_c::setAlphaButtonBAnimeMin() {
     }
 }
 
-/* 802071DC-802072C8 201B1C 00EC+00 1/1 0/0 0/0 .text setAlphaButtonBAnimeMax__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonBAnimeMax() {
     if (mpButtonB->getAlphaRate() != 1.0f) {
         if (dComIfGp_isASetFlag(1)) {
@@ -2022,8 +2024,6 @@ void dMeterButton_c::setAlphaButtonBAnimeMax() {
     }
 }
 
-/* 802072C8-80207358 201C08 0090+00 1/1 0/0 0/0 .text setAlphaButtonRAnimeMin__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonRAnimeMin() {
     if (mpButtonR->getAlphaRate() != 0.0f) {
         if (mButtonTimers[BUTTON_R_e] == 0) {
@@ -2040,8 +2040,6 @@ void dMeterButton_c::setAlphaButtonRAnimeMin() {
     }
 }
 
-/* 80207358-80207444 201C98 00EC+00 1/1 0/0 0/0 .text setAlphaButtonRAnimeMax__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonRAnimeMax() {
     if (mpButtonR->getAlphaRate() != 1.0f) {
         if (dComIfGp_isRSetFlag(1)) {
@@ -2059,8 +2057,6 @@ void dMeterButton_c::setAlphaButtonRAnimeMax() {
     }
 }
 
-/* 80207444-802074D4 201D84 0090+00 1/1 0/0 0/0 .text setAlphaButtonZAnimeMin__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonZAnimeMin() {
     if (mpButtonZ->getAlphaRate() != 0.0f) {
         if (mButtonTimers[BUTTON_Z_e] == 0) {
@@ -2077,8 +2073,6 @@ void dMeterButton_c::setAlphaButtonZAnimeMin() {
     }
 }
 
-/* 802074D4-802075C0 201E14 00EC+00 1/1 0/0 0/0 .text setAlphaButtonZAnimeMax__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonZAnimeMax() {
     if (mpButtonZ->getAlphaRate() != 1.0f) {
         if (dComIfGp_isZSetFlag(1)) {
@@ -2096,8 +2090,6 @@ void dMeterButton_c::setAlphaButtonZAnimeMax() {
     }
 }
 
-/* 802075C0-80207654 201F00 0094+00 1/1 0/0 0/0 .text setAlphaButton3DAnimeMin__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButton3DAnimeMin() {
     if (mpButton3D->getAlphaRate() != 0.0f) {
         if (mButtonTimers[BUTTON_3D_e] == 0) {
@@ -2115,8 +2107,6 @@ void dMeterButton_c::setAlphaButton3DAnimeMin() {
     }
 }
 
-/* 80207654-80207740 201F94 00EC+00 1/1 0/0 0/0 .text setAlphaButton3DAnimeMax__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButton3DAnimeMax() {
     if (mpButton3D->getAlphaRate() != 1.0f) {
         if (dComIfGp_is3DSetFlag(1)) {
@@ -2134,16 +2124,10 @@ void dMeterButton_c::setAlphaButton3DAnimeMax() {
     }
 }
 
-/* 80207740-80207744 202080 0004+00 1/1 0/0 0/0 .text
- * setAlphaButton3DVAnimeMin__14dMeterButton_cFv                */
 void dMeterButton_c::setAlphaButton3DVAnimeMin() {}
 
-/* 80207744-80207748 202084 0004+00 1/1 0/0 0/0 .text
- * setAlphaButton3DVAnimeMax__14dMeterButton_cFv                */
 void dMeterButton_c::setAlphaButton3DVAnimeMax() {}
 
-/* 80207748-802077EC 202088 00A4+00 1/1 0/0 0/0 .text setAlphaButtonCAnimeMin__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonCAnimeMin() {
     if (mpButtonC->getAlphaRate() != 0.0f) {
         if (mButtonTimers[BUTTON_C_e] == 0) {
@@ -2164,8 +2148,6 @@ void dMeterButton_c::setAlphaButtonCAnimeMin() {
     }
 }
 
-/* 802077EC-80207A28 20212C 023C+00 1/1 0/0 0/0 .text setAlphaButtonCAnimeMax__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonCAnimeMax() {
     if (mpButtonC->getAlphaRate() != 1.0f) {
         if (dComIfGp_isCStickSetFlag(1)) {
@@ -2212,8 +2194,6 @@ void dMeterButton_c::setAlphaButtonCAnimeMax() {
     }
 }
 
-/* 80207A28-80207AB8 202368 0090+00 1/1 0/0 0/0 .text setAlphaButtonSAnimeMin__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonSAnimeMin() {
     if (mpButtonS->getAlphaRate() != 0.0f) {
         if (mButtonTimers[BUTTON_S_e] == 0) {
@@ -2230,8 +2210,6 @@ void dMeterButton_c::setAlphaButtonSAnimeMin() {
     }
 }
 
-/* 80207AB8-80207BA4 2023F8 00EC+00 1/1 0/0 0/0 .text setAlphaButtonSAnimeMax__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonSAnimeMax() {
     if (mpButtonS->getAlphaRate() != 1.0f) {
         if (dComIfGp_isSButtonSetFlag(1)) {
@@ -2249,8 +2227,6 @@ void dMeterButton_c::setAlphaButtonSAnimeMax() {
     }
 }
 
-/* 80207BA4-80207C34 2024E4 0090+00 1/1 0/0 0/0 .text setAlphaButtonXAnimeMin__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonXAnimeMin() {
     if (mpButtonX->getAlphaRate() != 0.0f) {
         if (mButtonTimers[BUTTON_X_e] == 0) {
@@ -2267,8 +2243,6 @@ void dMeterButton_c::setAlphaButtonXAnimeMin() {
     }
 }
 
-/* 80207C34-80207D20 202574 00EC+00 1/1 0/0 0/0 .text setAlphaButtonXAnimeMax__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonXAnimeMax() {
     if (mpButtonX->getAlphaRate() != 1.0f) {
         if (dComIfGp_isXSetFlag(1)) {
@@ -2286,8 +2260,6 @@ void dMeterButton_c::setAlphaButtonXAnimeMax() {
     }
 }
 
-/* 80207D20-80207DB0 202660 0090+00 1/1 0/0 0/0 .text setAlphaButtonYAnimeMin__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonYAnimeMin() {
     if (mpButtonY->getAlphaRate() != 0.0f) {
         if (mButtonTimers[BUTTON_Y_e] == 0) {
@@ -2304,8 +2276,6 @@ void dMeterButton_c::setAlphaButtonYAnimeMin() {
     }
 }
 
-/* 80207DB0-80207E9C 2026F0 00EC+00 1/1 0/0 0/0 .text setAlphaButtonYAnimeMax__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonYAnimeMax() {
     if (mpButtonY->getAlphaRate() != 1.0f) {
         if (dComIfGp_isYSetFlag(1)) {
@@ -2323,8 +2293,6 @@ void dMeterButton_c::setAlphaButtonYAnimeMax() {
     }
 }
 
-/* 80207E9C-80207F34 2027DC 0098+00 1/1 0/0 0/0 .text
- * setAlphaButtonNunAnimeMin__14dMeterButton_cFv                */
 void dMeterButton_c::setAlphaButtonNunAnimeMin() {
     if (mpButtonNun != NULL) {
         if (mpButtonNun->getAlphaRate() != 0.0f) {
@@ -2343,8 +2311,6 @@ void dMeterButton_c::setAlphaButtonNunAnimeMin() {
     }
 }
 
-/* 80207F34-80208028 202874 00F4+00 1/1 0/0 0/0 .text
- * setAlphaButtonNunAnimeMax__14dMeterButton_cFv                */
 void dMeterButton_c::setAlphaButtonNunAnimeMax() {
     if (mpButtonNun != NULL) {
         if (mpButtonNun->getAlphaRate() != 1.0f) {
@@ -2364,8 +2330,6 @@ void dMeterButton_c::setAlphaButtonNunAnimeMax() {
     }
 }
 
-/* 80208028-802080C0 202968 0098+00 1/1 0/0 0/0 .text
- * setAlphaButtonRemoAnimeMin__14dMeterButton_cFv               */
 void dMeterButton_c::setAlphaButtonRemoAnimeMin() {
     if (mpButtonRemo != NULL) {
         if (mpButtonRemo->getAlphaRate() != 0.0f) {
@@ -2384,8 +2348,6 @@ void dMeterButton_c::setAlphaButtonRemoAnimeMin() {
     }
 }
 
-/* 802080C0-802081B4 202A00 00F4+00 1/1 0/0 0/0 .text
- * setAlphaButtonRemoAnimeMax__14dMeterButton_cFv               */
 void dMeterButton_c::setAlphaButtonRemoAnimeMax() {
     if (mpButtonRemo != NULL) {
         if (mpButtonRemo->getAlphaRate() != 1.0f) {
@@ -2405,8 +2367,6 @@ void dMeterButton_c::setAlphaButtonRemoAnimeMax() {
     }
 }
 
-/* 802081B4-8020824C 202AF4 0098+00 1/1 0/0 0/0 .text
- * setAlphaButtonRemo2AnimeMin__14dMeterButton_cFv              */
 void dMeterButton_c::setAlphaButtonRemo2AnimeMin() {
     if (mpButtonRemo2 != NULL) {
         if (mpButtonRemo2->getAlphaRate() != 0.0f) {
@@ -2425,8 +2385,6 @@ void dMeterButton_c::setAlphaButtonRemo2AnimeMin() {
     }
 }
 
-/* 8020824C-80208340 202B8C 00F4+00 1/1 0/0 0/0 .text
- * setAlphaButtonRemo2AnimeMax__14dMeterButton_cFv              */
 void dMeterButton_c::setAlphaButtonRemo2AnimeMax() {
     if (mpButtonRemo2 != NULL) {
         if (mpButtonRemo2->getAlphaRate() != 1.0f) {
@@ -2446,8 +2404,6 @@ void dMeterButton_c::setAlphaButtonRemo2AnimeMax() {
     }
 }
 
-/* 80208340-802083D8 202C80 0098+00 1/1 0/0 0/0 .text setAlphaButtonARAnimeMin__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonARAnimeMin() {
     if (mpButtonAR != NULL) {
         if (mpButtonAR->getAlphaRate() != 0.0f) {
@@ -2466,8 +2422,6 @@ void dMeterButton_c::setAlphaButtonARAnimeMin() {
     }
 }
 
-/* 802083D8-802084D8 202D18 0100+00 1/1 0/0 0/0 .text setAlphaButtonARAnimeMax__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonARAnimeMax() {
     if (mpButtonAR != NULL) {
         if (mpButtonAR->getAlphaRate() != 1.0f) {
@@ -2487,8 +2441,6 @@ void dMeterButton_c::setAlphaButtonARAnimeMax() {
     }
 }
 
-/* 802084D8-80208570 202E18 0098+00 1/1 0/0 0/0 .text
- * setAlphaButton3DBAnimeMin__14dMeterButton_cFv                */
 void dMeterButton_c::setAlphaButton3DBAnimeMin() {
     if (mpButton3DB != NULL) {
         if (mpButton3DB->getAlphaRate() != 0.0f) {
@@ -2507,8 +2459,6 @@ void dMeterButton_c::setAlphaButton3DBAnimeMin() {
     }
 }
 
-/* 80208570-80208670 202EB0 0100+00 1/1 0/0 0/0 .text
- * setAlphaButton3DBAnimeMax__14dMeterButton_cFv                */
 void dMeterButton_c::setAlphaButton3DBAnimeMax() {
     if (mpButton3DB != NULL) {
         if (mpButton3DB->getAlphaRate() != 1.0f) {
@@ -2528,8 +2478,6 @@ void dMeterButton_c::setAlphaButton3DBAnimeMax() {
     }
 }
 
-/* 80208670-80208708 202FB0 0098+00 1/1 0/0 0/0 .text
- * setAlphaButtonNUREAnimeMin__14dMeterButton_cFv               */
 void dMeterButton_c::setAlphaButtonNUREAnimeMin() {
     if (mpButtonNURE != NULL) {
         if (mpButtonNURE->getAlphaRate() != 0.0f) {
@@ -2548,8 +2496,6 @@ void dMeterButton_c::setAlphaButtonNUREAnimeMin() {
     }
 }
 
-/* 80208708-80208808 203048 0100+00 1/1 0/0 0/0 .text
- * setAlphaButtonNUREAnimeMax__14dMeterButton_cFv               */
 void dMeterButton_c::setAlphaButtonNUREAnimeMax() {
     if (mpButtonNURE != NULL) {
         if (mpButtonNURE->getAlphaRate() != 1.0f) {
@@ -2569,8 +2515,6 @@ void dMeterButton_c::setAlphaButtonNUREAnimeMax() {
     }
 }
 
-/* 80208808-802088A0 203148 0098+00 1/1 0/0 0/0 .text
- * setAlphaButtonReelAnimeMin__14dMeterButton_cFv               */
 void dMeterButton_c::setAlphaButtonReelAnimeMin() {
     if (mpButtonReel != NULL) {
         if (mpButtonReel->getAlphaRate() != 0.0f) {
@@ -2589,8 +2533,6 @@ void dMeterButton_c::setAlphaButtonReelAnimeMin() {
     }
 }
 
-/* 802088A0-802089A0 2031E0 0100+00 1/1 0/0 0/0 .text
- * setAlphaButtonReelAnimeMax__14dMeterButton_cFv               */
 void dMeterButton_c::setAlphaButtonReelAnimeMax() {
     if (mpButtonReel != NULL) {
         if (mpButtonReel->getAlphaRate() != 1.0f) {
@@ -2610,8 +2552,6 @@ void dMeterButton_c::setAlphaButtonReelAnimeMax() {
     }
 }
 
-/* 802089A0-80208A38 2032E0 0098+00 1/1 0/0 0/0 .text
- * setAlphaButtonReel2AnimeMin__14dMeterButton_cFv              */
 void dMeterButton_c::setAlphaButtonReel2AnimeMin() {
     if (mpButtonReel2 != NULL) {
         if (mpButtonReel2->getAlphaRate() != 0.0f) {
@@ -2630,8 +2570,6 @@ void dMeterButton_c::setAlphaButtonReel2AnimeMin() {
     }
 }
 
-/* 80208A38-80208AEC 203378 00B4+00 1/1 0/0 0/0 .text
- * setAlphaButtonReel2AnimeMax__14dMeterButton_cFv              */
 void dMeterButton_c::setAlphaButtonReel2AnimeMax() {
     if (mpButtonReel2 != NULL) {
         if (mpButtonReel2->getAlphaRate() != 1.0f) {
@@ -2646,8 +2584,6 @@ void dMeterButton_c::setAlphaButtonReel2AnimeMax() {
     }
 }
 
-/* 80208AEC-80208B84 20342C 0098+00 1/1 0/0 0/0 .text setAlphaButtonABAnimeMin__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonABAnimeMin() {
     if (mpButtonAB != NULL) {
         if (mpButtonAB->getAlphaRate() != 0.0f) {
@@ -2666,8 +2602,6 @@ void dMeterButton_c::setAlphaButtonABAnimeMin() {
     }
 }
 
-/* 80208B84-80208C38 2034C4 00B4+00 1/1 0/0 0/0 .text setAlphaButtonABAnimeMax__14dMeterButton_cFv
- */
 void dMeterButton_c::setAlphaButtonABAnimeMax() {
     if (mpButtonAB != NULL) {
         if (mpButtonAB->getAlphaRate() != 1.0f) {
@@ -2682,8 +2616,6 @@ void dMeterButton_c::setAlphaButtonABAnimeMax() {
     }
 }
 
-/* 80208C38-80208CD0 203578 0098+00 1/1 0/0 0/0 .text
- * setAlphaButtonTateAnimeMin__14dMeterButton_cFv               */
 void dMeterButton_c::setAlphaButtonTateAnimeMin() {
     if (mpButtonTate != NULL) {
         if (mpButtonTate->getAlphaRate() != 0.0f) {
@@ -2702,8 +2634,6 @@ void dMeterButton_c::setAlphaButtonTateAnimeMin() {
     }
 }
 
-/* 80208CD0-80208D84 203610 00B4+00 1/1 0/0 0/0 .text
- * setAlphaButtonTateAnimeMax__14dMeterButton_cFv               */
 void dMeterButton_c::setAlphaButtonTateAnimeMax() {
     if (mpButtonTate != NULL) {
         if (mpButtonTate->getAlphaRate() != 1.0f) {
@@ -2718,8 +2648,6 @@ void dMeterButton_c::setAlphaButtonTateAnimeMax() {
     }
 }
 
-/* 80208D84-80208E1C 2036C4 0098+00 1/1 0/0 0/0 .text
- * setAlphaButtonNunZAnimeMin__14dMeterButton_cFv               */
 void dMeterButton_c::setAlphaButtonNunZAnimeMin() {
     if (mpButtonNunZ != NULL) {
         if (mpButtonNunZ->getAlphaRate() != 0.0f) {
@@ -2738,8 +2666,6 @@ void dMeterButton_c::setAlphaButtonNunZAnimeMin() {
     }
 }
 
-/* 80208E1C-80208F1C 20375C 0100+00 1/1 0/0 0/0 .text
- * setAlphaButtonNunZAnimeMax__14dMeterButton_cFv               */
 void dMeterButton_c::setAlphaButtonNunZAnimeMax() {
     if (mpButtonNunZ != NULL) {
         if (mpButtonNunZ->getAlphaRate() != 1.0f) {
@@ -2759,8 +2685,6 @@ void dMeterButton_c::setAlphaButtonNunZAnimeMax() {
     }
 }
 
-/* 80208F1C-80208FB4 20385C 0098+00 1/1 0/0 0/0 .text
- * setAlphaButtonNunCAnimeMin__14dMeterButton_cFv               */
 void dMeterButton_c::setAlphaButtonNunCAnimeMin() {
     if (mpButtonNunC != NULL) {
         if (mpButtonNunC->getAlphaRate() != 0.0f) {
@@ -2779,8 +2703,6 @@ void dMeterButton_c::setAlphaButtonNunCAnimeMin() {
     }
 }
 
-/* 80208FB4-802090B4 2038F4 0100+00 1/1 0/0 0/0 .text
- * setAlphaButtonNunCAnimeMax__14dMeterButton_cFv               */
 void dMeterButton_c::setAlphaButtonNunCAnimeMax() {
     if (mpButtonNunC != NULL) {
         if (mpButtonNunC->getAlphaRate() != 1.0f) {
@@ -2800,8 +2722,6 @@ void dMeterButton_c::setAlphaButtonNunCAnimeMax() {
     }
 }
 
-/* 802090B4-8020914C 2039F4 0098+00 1/1 0/0 0/0 .text
- * setAlphaButtonBinAnimeMin__14dMeterButton_cFv                */
 void dMeterButton_c::setAlphaButtonBinAnimeMin() {
     if (mpButtonBin != NULL) {
         if (mpButtonBin->getAlphaRate() != 0.0f) {
@@ -2820,8 +2740,6 @@ void dMeterButton_c::setAlphaButtonBinAnimeMin() {
     }
 }
 
-/* 8020914C-8020924C 203A8C 0100+00 1/1 0/0 0/0 .text
- * setAlphaButtonBinAnimeMax__14dMeterButton_cFv                */
 void dMeterButton_c::setAlphaButtonBinAnimeMax() {
     if (mpButtonBin != NULL) {
         if (mpButtonBin->getAlphaRate() != 1.0f) {
@@ -2841,8 +2759,6 @@ void dMeterButton_c::setAlphaButtonBinAnimeMax() {
     }
 }
 
-/* 8020924C-802092C0 203B8C 0074+00 1/1 0/0 0/0 .text setAlphaButtonOAnimeMin__14dMeterButton_cFi
- */
 void dMeterButton_c::setAlphaButtonOAnimeMin(int param_0) {
     if (mpText[param_0]->getAlphaRate() != 0.0f) {
         isFastSet(param_0);
@@ -2851,8 +2767,6 @@ void dMeterButton_c::setAlphaButtonOAnimeMin(int param_0) {
     }
 }
 
-/* 802092C0-80209368 203C00 00A8+00 1/1 0/0 0/0 .text setAlphaButtonOAnimeMax__14dMeterButton_cFi
- */
 void dMeterButton_c::setAlphaButtonOAnimeMax(int param_0) {
     if (mpText[param_0]->getAlphaRate() != 1.0f) {
         if (isFastSet(param_0)) {
@@ -2865,7 +2779,6 @@ void dMeterButton_c::setAlphaButtonOAnimeMax(int param_0) {
     }
 }
 
-/* 80209368-802093D8 203CA8 0070+00 1/1 0/0 0/0 .text setAlphaIconAnimeMin__14dMeterButton_cFv */
 void dMeterButton_c::setAlphaIconAnimeMin() {
     if (mpItem_c->getAlphaRate() != 0.0f) {
         if (field_0x4d9 != 0xFF) {
@@ -2878,7 +2791,6 @@ void dMeterButton_c::setAlphaIconAnimeMin() {
     }
 }
 
-/* 802093D8-80209474 203D18 009C+00 1/1 0/0 0/0 .text setAlphaIconAnimeMax__14dMeterButton_cFv */
 void dMeterButton_c::setAlphaIconAnimeMax() {
     if (mpItem_c->getAlphaRate() != 1.0f) {
         if (field_0x4d9 != 0xFF && isFastSet(field_0x4d9)) {
@@ -2891,7 +2803,6 @@ void dMeterButton_c::setAlphaIconAnimeMax() {
     }
 }
 
-/* 80209474-802095C0 203DB4 014C+00 0/0 1/1 0/0 .text            isClose__14dMeterButton_cFv */
 bool dMeterButton_c::isClose() {
     if (mpButtonA->getAlphaRate() == 0.0f && mpButtonB->getAlphaRate() == 0.0f &&
         mpButtonR->getAlphaRate() == 0.0f && mpButtonZ->getAlphaRate() == 0.0f &&
@@ -2907,7 +2818,6 @@ bool dMeterButton_c::isClose() {
     return false;
 }
 
-/* 802095C0-80209CEC 203F00 072C+00 0/0 1/1 0/0 .text setString__14dMeterButton_cFPcUcUcUc */
 void dMeterButton_c::setString(char* i_string, u8 i_button, u8 param_2, u8 param_3) {
     if (strcmp(mButtonText[param_2], i_string) != 0 || field_0x4be[param_2] != i_button) {
         if (param_2 == 0 && strcmp(mButtonText[1], i_string) == 0 &&
@@ -3027,7 +2937,6 @@ void dMeterButton_c::setString(char* i_string, u8 i_button, u8 param_2, u8 param
     }
 }
 
-/* 80209CEC-80209D7C 20462C 0090+00 0/0 1/1 0/0 .text            hideAll__14dMeterButton_cFv */
 void dMeterButton_c::hideAll() {
     mpButtonScreen->search('ROOT')->hide();
 
@@ -3039,7 +2948,6 @@ void dMeterButton_c::hideAll() {
     mpTmRoot_c->hide();
 }
 
-/* 80209D7C-8020A540 2046BC 07C4+00 2/1 0/0 0/0 .text getCenterPosCalc__14dMeterButton_cFUcPci */
 f32 dMeterButton_c::getCenterPosCalc(u8 i_button, char* i_string, int param_2) {
     f32 temp_f0 = 1.0f;
     field_0x1e4[param_2] =
@@ -3171,8 +3079,6 @@ f32 dMeterButton_c::getCenterPosCalc(u8 i_button, char* i_string, int param_2) {
     return (var_f29 + var_f28) * 0.5f;
 }
 
-/* 8020A540-8020A94C 204E80 040C+00 2/1 0/0 0/0 .text            trans_button__14dMeterButton_cFif
- */
 void dMeterButton_c::trans_button(int param_0, f32 param_1) {
     u8 button = field_0x4be[param_0];
 
@@ -3267,8 +3173,6 @@ void dMeterButton_c::trans_button(int param_0, f32 param_1) {
     }
 }
 
-/* 8020A94C-8020AA84 20528C 0138+00 23/23 0/0 0/0 .text            hide_button__14dMeterButton_cFUc
- */
 void dMeterButton_c::hide_button(u8 i_button) {
     if (field_0x4be[0] == i_button) {
         if (field_0x4be[1] != BUTTON_NONE_e && field_0x4be[1] != BUTTON_B_e) {
@@ -3301,7 +3205,6 @@ void dMeterButton_c::hide_button(u8 i_button) {
     }
 }
 
-/* 8020AA84-8020AE68 2053C4 03E4+00 1/1 0/0 0/0 .text            pikariCheck__14dMeterButton_cFv */
 void dMeterButton_c::pikariCheck() {
     for (int i = 0; i < 2; i++) {
         if (field_0x4d7[i] != 0) {
@@ -3365,8 +3268,6 @@ void dMeterButton_c::pikariCheck() {
     }
 }
 
-/* 8020AE68-8020AE8C 2057A8 0024+00 3/3 0/0 0/0 .text paneTrans__14dMeterButton_cFP8CPaneMgrffUc
- */
 void dMeterButton_c::paneTrans(CPaneMgr* i_pane, f32 i_transX, f32 i_transY, u8 unused) {
     i_pane->paneTrans(i_transX, i_transY);
 }

@@ -2,6 +2,7 @@
 #define J3DSHAPETABLE_H
 
 #include "JSystem/J3DGraphBase/J3DShape.h"
+#include "JSystem/JUtility/JUTAssert.h"
 
 class JUTNameTab;
 
@@ -17,15 +18,18 @@ public:
         mShapeName = NULL;
     }
 
-    /* 803258A0 */ void hide();
-    /* 803258D8 */ void show();
-    /* 80325910 */ void initShapeNodes(J3DDrawMtxData*, J3DVertexData*);
-    /* 8032597C */ void sortVcdVatCmd();
+    void hide();
+    void show();
+    void initShapeNodes(J3DDrawMtxData*, J3DVertexData*);
+    void sortVcdVatCmd();
 
     virtual ~J3DShapeTable() {}
 
     u16 getShapeNum() const { return mShapeNum; }
-    J3DShape* getShapeNodePointer(u16 idx) const { return mShapeNodePointer[idx]; }
+    J3DShape* getShapeNodePointer(u16 idx) const {
+        J3D_ASSERT_RANGE(85, idx < mShapeNum);
+        return mShapeNodePointer[idx];
+    }
 
 private:
     friend class J3DModelLoader;
